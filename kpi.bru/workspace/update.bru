@@ -1,11 +1,11 @@
 meta {
-  name: create
+  name: update
   type: http
-  seq: 1
+  seq: 4
 }
 
-post {
-  url: {{baseUrl}}/workspace/
+patch {
+  url: {{baseUrl}}/workspace/a13c90a6-c110-4e0f-9a3f-3649db335fa6
   body: json
   auth: bearer
 }
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "name": "abcd"
+    "name":"sujal"
   }
 }
 

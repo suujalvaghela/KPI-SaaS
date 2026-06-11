@@ -1,18 +1,42 @@
 import { prisma } from "../../lib/prisma.js"
-import { iWorkspace } from "./workspace.type.js"
+import { iUpdateUser } from "../user/user.type.js"
+import { iUpdateWorkspace, iWorkspace } from "./workspace.type.js"
 
-export const createWorkspaceDto = (data: iWorkspace) => {
+export const createWorkspaceDto = ({ name, author }: iWorkspace) => {
     return prisma.workspace.create({
-        data
+        data: {
+            name,
+            author
+        }
     })
 }
 
-export const getAllWorkspaceDto = () => {
+export const getAllWorkspacesDto = () => {
     return prisma.workspace.findMany({
         where: { deletedAt: null }
     })
 }
 
-export const getWorkspaceByidDto = () => { }
-export const updateWorkspaceDto = () => { }
-export const deleteWorkspaceDto = () => { }
+export const getWorkspaceByidDto = async (id: string) => {
+    return prisma.workspace.findUnique({
+        where: {
+            id,
+            deletedAt: null
+        }
+    })
+}
+export const updateWorkspaceDto = ({ id, name }: iUpdateWorkspace) => {
+    return prisma.workspace.update({
+        where: { id },
+        data: { name }
+    })
+}
+
+export const deleteWorkspaceDto = (id: string) => {
+    return prisma.workspace.update({
+        where: { id },
+        data: {
+            deletedAt: new Date()
+        }
+    })
+}

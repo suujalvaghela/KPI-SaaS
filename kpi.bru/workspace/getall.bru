@@ -1,0 +1,15 @@
+meta {
+  name: getall
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/workspace
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

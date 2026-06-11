@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/workspace/
+  url: {{baseUrl}}/policy
   body: json
   auth: bearer
 }
@@ -16,7 +16,9 @@ auth:bearer {
 
 body:json {
   {
-    "name": "abcd"
+    "role":"f6f8bd24-caaa-49e2-b475-9af7d78c6be5",
+    "resource":"workspaces",
+    "action":"create"
   }
 }
 
