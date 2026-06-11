@@ -3,7 +3,7 @@ import { PrismaClient } from '../generated/prisma/client.js'
 export const seedRoles = async (prisma: PrismaClient) => {
     console.log("Seeding roles...");
 
-    const defaultRoles = ["USER", "ADMIN"]
+    const defaultRoles = ["USER", "ADMIN", "MANAGER"]
 
     for (const roleName of defaultRoles) {
         await prisma.role.upsert({

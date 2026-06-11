@@ -7,15 +7,16 @@ datasource db {
   provider = "postgresql"
 }
 
-enum workspace_role {
-  Owner
-  Admin
-  User
-}
 
 enum threshold_condition {
   ABOVE
   BELOW
+}
+
+enum workspace_role {
+  Owner
+  Admin
+  User
 }
 
 model Role {

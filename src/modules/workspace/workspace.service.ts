@@ -1,5 +1,5 @@
 import { iWorkspace } from "./workspace.type.js"
-import { createWorkspaceDto } from "./workspace.dao.js"
+import { createWorkspaceDto, getAllWorkspaceDto } from "./workspace.dao.js"
 import { AppError } from "../../utils/response.js";
 import { getUserByIdDto } from "../user/user.dao.js";
 
@@ -7,7 +7,7 @@ export const createWorkspaceService = async (data: iWorkspace) => {
 
     const user = await getUserByIdDto(data.author)
 
-    if(!user) {
+    if (!user) {
         const error = new Error('Author not found') as AppError;
         error.statusCode = 404;
         throw error;
@@ -23,7 +23,15 @@ export const createWorkspaceService = async (data: iWorkspace) => {
 
     return workspace;
 }
-export const getAllWorkspaceService = async () => { }
+export const getAllWorkspaceService = async () => {
+    const workspaces = await getAllWorkspaceDto()
+    if (!workspaces) {
+        const error = new Error('Failed to fetch workspaces') as AppError;
+        error.statusCode = 500;
+        throw error;
+    }
+    return workspaces;
+}
 export const getWorkspaceByidService = async () => { }
 export const updateWorkspaceService = async () => { }
 export const deleteWorkspaceService = async () => { }
