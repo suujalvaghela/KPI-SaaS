@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum workspace_role {
+  Owner
+  Admin
+  User
+}
+
+enum threshold_condition {
+  ABOVE
+  BELOW
+}
+
+model Role {
+  id        String   @id @default(uuid())
+  name      String @unique
+  users     User[]
+  policies  Policy[]
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("roles")
+}
+
+model Policy {
+  id        String   @id @default(uuid())
+  roles     Role     @relation(fields: [role], references: [id])
+  role      String
+  resource  String
+  action    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([role, resource, action])
+  @@map("policies")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  googleId      String?        @unique @map("google_id")
+  email         String         @unique
+  name          String
+  avatar        String?
+  roles         Role           @relation(fields: [role], references: [id])
+  role          String
+  memberships   Membership[]
+  notifications Notification[]
+  workspaces    Workspace[]
+  metrics       Metric[]
+  thresholds    Threshold[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  deletedAt     DateTime?      @map("deleted_at")
+
+  @@map("users")
+}
+
+model Workspace {
+  id            String         @id @default(uuid())
+  name          String
+  user          User           @relation(fields: [author], references: [id])
+  author        String
+  memberships   Membership[]
+  metrics       Metric[]
+  // notifications Notification[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  deletedAt     DateTime?      @map("deleted_at")
+  notifications Notification[]
+
+  @@map("workspaces")
+}
+
+model Membership {
+  users      User           @relation(fields: [user], references: [id])
+  user       String
+  workspaces Workspace      @relation(fields: [workspace], references: [id])
+  workspace  String
+  role       workspace_role @default(User)
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  @@id([user, workspace])
+  @@map("memberships")
+}
+
+model Metric {
+  id          String      @id @default(uuid())
+  workspaces  Workspace   @relation(fields: [workspace], references: [id])
+  workspace   String
+  name        String
+  description String?
+  unit        String
+  users       User        @relation(fields: [creator], references: [id])
+  creator     String
+  datapoints  Datapoint[]
+  thresholds  Threshold[]
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("metrics")
+}
+
+model Datapoint {
+  id        String   @id @default(uuid())
+  metrics   Metric   @relation(fields: [metric], references: [id])
+  metric    String
+  value     Decimal
+  timestamp DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("datapoints")
+}
+
+model Threshold {
+  id         String              @id @default(uuid())
+  metrics    Metric              @relation(fields: [metric], references: [id])
+  metric     String
+  condition  threshold_condition
+  value      Decimal
+  user       User                @relation(fields: [notifyUser], references: [email])
+  notifyUser String              @map("notify_user")
+  createdAt  DateTime            @default(now()) @map("created_at")
+  updatedAt  DateTime            @updatedAt @map("updated_at")
+
+  @@map("thresholds")
+}
+
+model Notification {
+  id         String    @id @default(uuid())
+  users      User      @relation(fields: [user], references: [email])
+  user       String
+  workspaces Workspace @relation(fields: [workspace], references: [id])
+  workspace  String
+  message    String
+  isRead     Boolean   @default(false) @map("is_read")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("notifications")
+}
