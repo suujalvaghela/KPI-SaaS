@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
-import { deleteUserDto, getAllUsersDto, getUserByIdDto, updateUserDto } from "./user.dao.js";
+import { getAllUsersDto, getUserByIdDto, updateUserDto } from "./user.dao.js";
 import { clearRefreshTokenCookie } from "../../utils/tokens.js";
+import { deleteUserService } from "./user.service.js";
 
 export const getAllUsers = async (req: Request, res: Response) => {
     const users = await getAllUsersDto();
@@ -46,14 +47,15 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const { params: { id } } = req;
+    const authUser = req.user!;
 
-    if (!id || typeof id !== 'string') {
+    if(!id || typeof id !== 'string') {
         const error = new Error('Invalid user ID') as AppError;
         error.statusCode = 400;
         throw error;
     }
 
-    await deleteUserDto(id);
+    await deleteUserService({ authUser, id });
     await clearRefreshTokenCookie(res);
 
     return successResponse(res, 200, 'User deleted successfully');
