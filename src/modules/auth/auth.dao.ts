@@ -29,12 +29,15 @@ export const GoogleUserDto = async (data: GoogleUser) => {
             where: { id: user.id },
             data: {
                 googleId: data.googleId,
-                avatar: data.avatar
+                avatar: data.avatar,
             }
+        })
+    }
+    else if (user.deletedAt != null) {
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { deletedAt: null }
         })
     }
     return user;
 }
-
-export const getUserWithRoleById = () => { }
-export const getUserDetails = () => { }

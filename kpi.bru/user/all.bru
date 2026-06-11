@@ -1,0 +1,20 @@
+meta {
+  name: all
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/user/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

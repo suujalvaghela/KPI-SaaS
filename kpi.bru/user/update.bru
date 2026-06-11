@@ -1,0 +1,26 @@
+meta {
+  name: update
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{baseUrl}}/user/f1d217ae-225e-468d-9b97-14586962cac7
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name":"Vaghelaaa"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: logout
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/logout
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  bru.setEnvVar("accessToken", "")
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

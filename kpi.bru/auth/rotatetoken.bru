@@ -1,0 +1,27 @@
+meta {
+  name: rotatetoken
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/rotate-tokens
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+script:post-response {
+  const body = res.getBody()
+  
+  bru.setEnvVar("accessToken", body?.data?.accessToken)
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

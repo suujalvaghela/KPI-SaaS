@@ -1,14 +1,18 @@
 import { Router } from "express";
+import { createWorkspace } from "./workspace.controller.js";
+import { authenticationMiddlewear } from "../../middlewares/authentication.js";
 
 const router = Router()
 
+router.use(authenticationMiddlewear)
+
 router.route('/')
-    .post()
-    .get()
+    .post(createWorkspace)
+    // .get()
 
-router.route('/:id')
-    .get()
-    .patch()
-    .delete()
+// router.route('/:id')
+    // .get()
+    // .patch()
+    // .delete()
 
-export { router }
+export { router as workspaceRoute }

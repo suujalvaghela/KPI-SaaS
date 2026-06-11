@@ -4,8 +4,8 @@ import { getCurrentUser, handleGoogleAuth, logoutUser, rotateTokens } from "./au
 const router = Router();
 
 router.route('/google').post(handleGoogleAuth);
-router.route('/refresh').get(rotateTokens);
+router.route('/rotate-tokens').post(rotateTokens);
 router.route('/logout').post(logoutUser);
-router.route('/me').post(getCurrentUser);
+router.route('/me').get(getCurrentUser);
 
 export default router;

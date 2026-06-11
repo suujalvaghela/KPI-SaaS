@@ -1,13 +1,15 @@
 import 'express';
 
+export interface AuthenticatedUser {
+    id: string;
+    email: string;
+    role: string;
+}
+
 declare global {
     namespace Express {
         interface Request {
-            user?: {
-                id: string;
-                email: string;
-                role: string;
-            }
+            user?: AuthenticatedUser;
         }
     }
 }
