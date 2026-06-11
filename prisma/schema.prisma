@@ -74,6 +74,7 @@ model Workspace {
   deletedAt     DateTime?      @map("deleted_at")
   notifications Notification[]
 
+  @@unique([name, author])
   @@map("workspaces")
 }
 

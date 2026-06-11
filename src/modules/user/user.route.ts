@@ -13,4 +13,4 @@ router.route('/:id')
     .get(getUserById)
     .delete(deleteUser)
 
-export default router;
+export const userRoute = router;
