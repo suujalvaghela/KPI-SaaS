@@ -11,12 +11,6 @@ export const createWorkspaceDto = ({ name, author }: iWorkspace) => {
     })
 }
 
-export const getAllWorkspacesDto = () => {
-    return prisma.workspace.findMany({
-        where: { deletedAt: null }
-    })
-}
-
 export const getWorkspaceByidDto = async (workspace: string) => {
     return prisma.workspace.findUnique({
         where: {
@@ -25,9 +19,9 @@ export const getWorkspaceByidDto = async (workspace: string) => {
         }
     })
 }
-export const updateWorkspaceDto = ({ id, name }: iUpdateWorkspace) => {
+export const updateWorkspaceDto = ({ workspace, name }: iUpdateWorkspace) => {
     return prisma.workspace.update({
-        where: { id },
+        where: { id: workspace },
         data: { name }
     })
 }

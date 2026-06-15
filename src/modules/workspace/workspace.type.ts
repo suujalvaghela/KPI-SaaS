@@ -6,6 +6,6 @@ export interface iWorkspace {
 }
 
 export interface iUpdateWorkspace {
-    id: string,
+    workspace: string,
     name: string
 }

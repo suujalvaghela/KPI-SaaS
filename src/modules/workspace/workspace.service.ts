@@ -1,8 +1,10 @@
 import { iUpdateWorkspace, iWorkspace } from "./workspace.type.js"
-import { createWorkspaceDto, deleteWorkspaceDto, getAllWorkspacesDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js"
+import { createWorkspaceDto, deleteWorkspaceDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js"
 import { AppError } from "../../utils/response.js";
 import { getUserByIdDto } from "../user/user.dao.js";
 import { AuthenticatedUser } from "../../utils/authUser.js";
+import { iGetMember } from "../membership/membership.type.js";
+import { getMemberByIdsDto } from "../membership/membership.dao.js";
 
 export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
 
@@ -25,28 +27,30 @@ export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
     return workspace;
 }
 
-export const updateWorkspaceService = async (
-    authUser: AuthenticatedUser, {
-        id,
-        name
-    }: iUpdateWorkspace
-) => {
-    const workspace = await getWorkspaceByidDto(id)
+export const getWorkspaceByIdService = async ({ user, workspace }: iGetMember) => {
+    const member = await getMemberByIdsDto({ user, workspace })
 
-    if (!workspace) {
+    if (!member) {
+        const error = new Error('You are not a part of this workspace!') as AppError
+        error.statusCode = 404;
+        throw error
+    }
+
+    return await getWorkspaceByidDto(workspace);
+}
+
+export const updateWorkspaceService = async ({ workspace, name }: iUpdateWorkspace) => {
+    const workspace_data = await getWorkspaceByidDto(workspace)
+
+    if (!workspace_data) {
         const error = new Error('workspace does not existing') as AppError;
         error.statusCode = 403;
         throw error;
     }
 
-    if (workspace?.author !== authUser.id) {
-        const error = new Error('Forbidden: You can update only your own workspace') as AppError;
-        error.statusCode = 403;
-        throw error;
-    }
-
-    await updateWorkspaceDto({ id, name })
+    await updateWorkspaceDto({ workspace, name })
 }
+
 export const deleteWorkspaceService = async (
     authUser: AuthenticatedUser,
     id: string

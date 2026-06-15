@@ -1,6 +1,6 @@
 import { workspace_role } from "../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
-import { iCreateMember, iGetMember, iUpdateMember, iDeleteMember, iWorkspacesMember } from "./membership.type.js";
+import { iCreateMember, iGetMember, iUpdateMember, iWorkspacesMember } from "./membership.type.js";
 
 export const createMemberDto = async ({
     mUser,
@@ -54,7 +54,8 @@ export const getAllWorkspacesByMemberDto = async ({ authUser, user }: iWorkspace
                         }
                     }
                 }
-            ]
+            ],
+            deletedAt: null
         }
     })
 }
