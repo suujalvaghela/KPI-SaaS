@@ -1,9 +1,10 @@
 import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
-import { createWorkspaceService, deleteWorkspaceService, updateWorkspaceService } from "./workspace.service.js";
-import { getAllWorkspacesDto, getWorkspaceByidDto } from "./workspace.dao.js";
-import { createMemberDto } from "../membership/membership.dao.js";
+import { createWorkspaceService, deleteWorkspaceService, getWorkspaceByIdService, updateWorkspaceService } from "./workspace.service.js";
+import { getWorkspaceByidDto } from "./workspace.dao.js";
+import { createMemberDto, getAllWorkspacesByMemberDto, getMemberByIdsDto } from "../membership/membership.dao.js";
 import { workspace_role } from "../../generated/prisma/enums.js";
+import { workspaceCreator } from "../membership/membership.authorization.js";
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const { body: { name } } = req;
@@ -20,12 +21,16 @@ export const createWorkspace = async (req: Request, res: Response) => {
 
     return successResponse(res, 201, 'Workspace created successfully');
 }
+
 export const getAllWorkspace = async (req: Request, res: Response) => {
-    const workspaces = await getAllWorkspacesDto()
+    const authUser = req.user!
+    const workspaces = await getAllWorkspacesByMemberDto({ authUser: authUser.id, user: authUser.id })
     return successResponse(res, 200, 'Workspaces retrieved successfully', workspaces)
 }
+
 export const getWorkspaceByid = async (req: Request, res: Response) => {
     const { params: { id } } = req;
+    const authUser = req.user!
 
     if (!id || typeof id !== 'string') {
         const error = new Error('Invalid workspace ID') as AppError;
@@ -33,6 +38,7 @@ export const getWorkspaceByid = async (req: Request, res: Response) => {
         throw error;
     }
 
+    await getWorkspaceByIdService({ user: authUser.id, workspace: id })
     const workspace = await getWorkspaceByidDto(id);
 
     if (!workspace) {
@@ -43,6 +49,7 @@ export const getWorkspaceByid = async (req: Request, res: Response) => {
 
     return successResponse(res, 200, 'Workspace retrieved successfully', workspace)
 }
+
 export const updateWorkspace = async (req: Request, res: Response) => {
     const { params: { id } } = req;
     const { body: { name } } = req;
@@ -54,10 +61,11 @@ export const updateWorkspace = async (req: Request, res: Response) => {
         throw error;
     }
 
-    await updateWorkspaceService(authUser, { id, name });
-
+    await workspaceCreator({ authUser: authUser.id, workspace: id })
+    await updateWorkspaceService({ workspace: id, name });
     return successResponse(res, 200, "Workspace updated successfully")
 }
+
 export const deleteWorkspace = async (req: Request, res: Response) => {
     const { params: { id } } = req;
     const authUser = req.user!
