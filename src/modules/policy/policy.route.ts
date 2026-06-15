@@ -6,6 +6,10 @@ import { authorizationMiddlewear } from '../../middlewares/authorization.js';
 const router = Router();
 
 
-router.route('/').post(authenticationMiddlewear, authorizationMiddlewear("policies", "create"), createPolicy);
+router.route('/').post(
+    authenticationMiddlewear,
+    // authorizationMiddlewear("policies", "create"),
+    createPolicy
+);
 
 export const policyRoute = router;

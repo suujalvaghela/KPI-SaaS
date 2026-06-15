@@ -15,13 +15,13 @@ export const handleGoogleAuth = async (req: Request, res: Response) => {
 
     const { refreshToken, accessToken } = await authenticateGoogleUser(idToken)
 
-    refreshTokenCookies(res, refreshToken)
+    // refreshTokenCookies(res, refreshToken)
 
-    return successResponse(res, 200, 'Authentication successful', { accessToken })
+    return successResponse(res, 200, 'Authentication successful', { accessToken, refreshToken })
 }
 
 export const rotateTokens = async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken
+    const { refreshToken } = req.body || req.cookies
 
     if (!refreshToken) {
         const error = new Error('No refresh token provided') as AppError;
@@ -30,9 +30,9 @@ export const rotateTokens = async (req: Request, res: Response) => {
     }
     const tokens = await refreshSessionTokens(refreshToken)
 
-    refreshTokenCookies(res, tokens.refreshToken)
+    // refreshTokenCookies(res, tokens.refreshToken)
 
-    return successResponse(res, 200, 'Tokens refreshed successfully', { accessToken: tokens.accessToken });
+    return successResponse(res, 200, 'Tokens refreshed successfully', { refreshToken: refreshToken, accessToken: tokens.accessToken });
 }
 
 export const logoutUser = async (req: Request, res: Response) => {

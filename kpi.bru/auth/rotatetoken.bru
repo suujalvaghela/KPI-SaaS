@@ -14,6 +14,12 @@ auth:bearer {
   token: 
 }
 
+body:json {
+  // {
+  //   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdlNzI3NTljLTRhM2UtNDA3MC04NDk2LTUwMGM4YzkwOWE2ZSIsInJvbGUiOiJiMTlkOTQyZi0zNWY5LTQ2OGUtODhmNC03MDgwNWQ0Yzk0Y2UiLCJlbWFpbCI6IjFzdXVqYWx2YWdoZWxhMUBnbWFpbC5jb20iLCJpYXQiOjE3ODEyNjMzNTgsImV4cCI6MTc4MTg2ODE1OH0.m1CF5u7V0jozmeQfx9MTSXxg_ioVE13vnEyR7vuxhw0"
+  // }
+}
+
 script:post-response {
   const body = res.getBody()
   
