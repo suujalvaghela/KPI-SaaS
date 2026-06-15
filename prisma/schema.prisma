@@ -8,9 +8,8 @@ datasource db {
 }
 
 enum workspace_role {
-  Owner
-  Admin
-  User
+  Creator
+  Guest
 }
 
 enum threshold_condition {
@@ -20,7 +19,7 @@ enum threshold_condition {
 
 model Role {
   id        String   @id @default(uuid())
-  name      String @unique
+  name      String   @unique
   users     User[]
   policies  Policy[]
   createdAt DateTime @default(now()) @map("created_at")
@@ -82,7 +81,7 @@ model Membership {
   user       String
   workspaces Workspace      @relation(fields: [workspace], references: [id])
   workspace  String
-  role       workspace_role @default(User)
+  role       workspace_role @default(Guest)
   createdAt  DateTime       @default(now()) @map("created_at")
   updatedAt  DateTime       @updatedAt @map("updated_at")
 

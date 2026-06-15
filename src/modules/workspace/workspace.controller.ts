@@ -2,6 +2,8 @@ import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
 import { createWorkspaceService, deleteWorkspaceService, updateWorkspaceService } from "./workspace.service.js";
 import { getAllWorkspacesDto, getWorkspaceByidDto } from "./workspace.dao.js";
+import { createMemberDto } from "../membership/membership.dao.js";
+import { workspace_role } from "../../generated/prisma/enums.js";
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const { body: { name } } = req;
@@ -13,7 +15,8 @@ export const createWorkspace = async (req: Request, res: Response) => {
         throw error;
     }
 
-    await createWorkspaceService({ name, author: authUser.id })
+    const workspace = await createWorkspaceService({ name, author: authUser.id })
+    await createMemberDto({ mUser: workspace.author, workspace: workspace.id, role: workspace_role.Creator })
 
     return successResponse(res, 201, 'Workspace created successfully');
 }
@@ -59,13 +62,13 @@ export const deleteWorkspace = async (req: Request, res: Response) => {
     const { params: { id } } = req;
     const authUser = req.user!
 
-    if(!id || typeof id !== 'string') {
+    if (!id || typeof id !== 'string') {
         const error = new Error('Invalid workspace ID') as AppError;
         error.statusCode = 400;
         throw error;
     }
 
     await deleteWorkspaceService(authUser, id)
-    return successResponse(res,200,'Workspace Deleted Successfully')
+    return successResponse(res, 200, 'Workspace Deleted Successfully')
 
 }

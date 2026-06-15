@@ -17,10 +17,10 @@ export const getAllWorkspacesDto = () => {
     })
 }
 
-export const getWorkspaceByidDto = async (id: string) => {
+export const getWorkspaceByidDto = async (workspace: string) => {
     return prisma.workspace.findUnique({
         where: {
-            id,
+            id: workspace,
             deletedAt: null
         }
     })
@@ -40,3 +40,4 @@ export const deleteWorkspaceDto = (id: string) => {
         }
     })
 }
+

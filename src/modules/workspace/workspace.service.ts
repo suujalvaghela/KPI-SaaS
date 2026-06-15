@@ -2,7 +2,6 @@ import { iUpdateWorkspace, iWorkspace } from "./workspace.type.js"
 import { createWorkspaceDto, deleteWorkspaceDto, getAllWorkspacesDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js"
 import { AppError } from "../../utils/response.js";
 import { getUserByIdDto } from "../user/user.dao.js";
-import { prisma } from "../../lib/prisma.js";
 import { AuthenticatedUser } from "../../utils/authUser.js";
 
 export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
