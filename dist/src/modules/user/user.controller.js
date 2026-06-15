@@ -1,0 +1,47 @@
+import { successResponse } from "../../utils/response.js";
+import { getAllUsersDto, getUserByIdDto, updateUserDto } from "./user.dao.js";
+import { clearRefreshTokenCookie } from "../../utils/tokens.js";
+import { deleteUserService } from "./user.service.js";
+export const getAllUsers = async (req, res) => {
+    const users = await getAllUsersDto();
+    return successResponse(res, 200, 'Users retrieved successfully', users);
+};
+export const updateUser = async (req, res) => {
+    const { params: { id } } = req;
+    const { body: { name } } = req;
+    const authUser = req.user;
+    if (authUser?.id !== id) {
+        const error = new Error('Forbidden: You can only update your own profile');
+        error.statusCode = 403;
+        throw error;
+    }
+    const user = await updateUserDto({ id, name });
+    return successResponse(res, 200, 'User updated successfully', user);
+};
+export const getUserById = async (req, res) => {
+    const { params: { id } } = req;
+    if (!id || typeof id !== 'string') {
+        const error = new Error('Invalid user ID');
+        error.statusCode = 400;
+        throw error;
+    }
+    const user = await getUserByIdDto(id);
+    if (!user) {
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
+    return successResponse(res, 200, 'User retrieved successfully', user);
+};
+export const deleteUser = async (req, res) => {
+    const { params: { id } } = req;
+    const authUser = req.user;
+    if (!id || typeof id !== 'string') {
+        const error = new Error('Invalid user ID');
+        error.statusCode = 400;
+        throw error;
+    }
+    await deleteUserService({ authUser, id });
+    await clearRefreshTokenCookie(res);
+    return successResponse(res, 200, 'User deleted successfully');
+};
