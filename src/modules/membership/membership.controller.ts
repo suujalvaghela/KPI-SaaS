@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { successResponse } from "../../utils/response.js";
 import { createMemberService, getAllMembersByWorkspaceService, updateMemberService, } from "./membership.service.js";
-import { deleteMemberDto, getAllWorkspacesByMemberDto } from "./membership.dao.js";
+import { deleteMemberDto, getAllWorkspacesByMemberDto, getMyWorkspacesDto } from "./membership.dao.js";
 import { workspaceCreator } from "./membership.authorization.js";
-import { AppError } from "../../utils/response.js";
 
 export const createMember = async (req: Request, res: Response) => {
     const { body: { user } } = req;
@@ -35,17 +34,17 @@ export const getAllWorkspacesByMember = async (req: Request, res: Response) => {
     return successResponse(res, 200, "workspaces fetched successfully!", workspaces)
 }
 
+export const getMyWorkspaces = async (req: Request, res: Response) => {
+    const authUser = req.user!
+    const workspaces = await getMyWorkspacesDto(authUser.id)
+    return successResponse(res, 200, "workspaces fetched successfully!", workspaces);
+}
+
 export const updateMember = async (req: Request, res: Response) => {
     const workspace = req.params.workspaceId as string
     const user = req.params.memberId as string
     const authUser = req.user!
     const { body: { role } } = req;
-
-    if (!role) {
-        const error = new Error('Role is required!') as AppError
-        error.statusCode = 400;
-        throw error
-    }
 
     await workspaceCreator({ authUser: authUser.id, workspace })
     await updateMemberService({ user, workspace, role })
@@ -61,7 +60,7 @@ export const deleteMember = async (req: Request, res: Response) => {
         await deleteMemberDto({ user, workspace })
         return successResponse(res, 200, 'member deleted Successfully!')
     }
-    
+
     await workspaceCreator({ authUser: authUser.id, workspace })
     await deleteMemberDto({ user, workspace })
     return successResponse(res, 200, 'member deleted Successfully!')

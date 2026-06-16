@@ -1,0 +1,26 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/threshold/workspace/8bf92491-aee8-45c1-9330-5fd912d69895/ed9de909-1c51-4a8e-b2ee-a70773808cdc
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "condition":"ABOVE"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

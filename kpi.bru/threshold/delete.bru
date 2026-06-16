@@ -1,0 +1,20 @@
+meta {
+  name: delete
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/threshold/workspace/8bf92491-aee8-45c1-9330-5fd912d69895/ed9de909-1c51-4a8e-b2ee-a70773808cdc
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

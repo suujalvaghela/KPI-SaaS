@@ -51,10 +51,14 @@ model User {
   notifications Notification[]
   workspaces    Workspace[]
   metrics       Metric[]
-  thresholds    Threshold[]
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  deletedAt     DateTime?      @map("deleted_at")
+  datapoints    Datapoint[]
+
+  createdThresholds  Threshold[] @relation("ThresholdNotifyUser")
+  notifiedThresholds Threshold[] @relation("ThresholdCreator")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   @@map("users")
 }
@@ -71,6 +75,7 @@ model Workspace {
   updatedAt     DateTime       @updatedAt @map("updated_at")
   deletedAt     DateTime?      @map("deleted_at")
   notifications Notification[]
+  thresholds    Threshold[]
 
   @@unique([name, author])
   @@map("workspaces")
@@ -112,6 +117,8 @@ model Datapoint {
   metric    String
   value     Decimal
   timestamp DateTime
+  users     User     @relation(fields: [creator], references: [id])
+  creator   String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -119,16 +126,25 @@ model Datapoint {
 }
 
 model Threshold {
-  id         String              @id @default(uuid())
-  metrics    Metric              @relation(fields: [metric], references: [id])
-  metric     String
-  condition  threshold_condition
-  value      Decimal
-  user       User                @relation(fields: [notifyUser], references: [email])
-  notifyUser String              @map("notify_user")
-  createdAt  DateTime            @default(now()) @map("created_at")
-  updatedAt  DateTime            @updatedAt @map("updated_at")
+  id        String              @id @default(uuid())
+  metrics   Metric              @relation(fields: [metric], references: [id])
+  metric    String
+  condition threshold_condition
+  value     Decimal
 
+  workspaces Workspace @relation(fields: [workspace], references: [id])
+  workspace  String
+
+  user       User   @relation("ThresholdNotifyUser", fields: [notifyUser], references: [email])
+  notifyUser String @map("notify_user")
+
+  creator   User   @relation("ThresholdCreator", fields: [createdBy], references: [id])
+  createdBy String @map("created_by")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([metric, condition, value, notifyUser])
   @@map("thresholds")
 }
 

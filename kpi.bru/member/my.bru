@@ -1,0 +1,20 @@
+meta {
+  name: my
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/member/me/workspaces
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
