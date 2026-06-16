@@ -36,7 +36,7 @@ export const authenticateGoogleUser = async (idToken: string) => {
 }
 
 export const refreshSessionTokens = async (refreshToken: string) => {
-    const payload = verifyRefreshToken({ refreshToken });
+    const payload = verifyRefreshToken(refreshToken);
     const user = await getUserByIdDto(payload.id);
 
     if (!user) {

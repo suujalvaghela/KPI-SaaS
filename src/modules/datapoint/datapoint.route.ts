@@ -8,7 +8,7 @@ const router = Router()
 
 router.use(authenticationMiddlewear)
 
-router.route('/metric/:metricId')
+router.route('/workspace/:workspaceId/metric/:metricId')
     .post(
         validate(createDatapointSchema),
         createDatapoint

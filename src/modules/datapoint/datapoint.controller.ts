@@ -3,13 +3,22 @@ import { successResponse } from "../../utils/response.js"
 import { createDatapointService, getDatapointsByMetricService, } from "./datapoint.service.js"
 import { workspaceCreator } from "../membership/membership.authorization.js"
 import { deleteDatapointDto } from "./datapoint.dao.js"
+import { getIO } from "../../socket/socket.js"
 
 export const createDatapoint = async (req: Request, res: Response) => {
     const { value, timestamp } = req.body
     const metric = req.params.metricId as string
+    const workspace = req.params.workspaceId as string
     const authUser = req.user!
 
     await createDatapointService({ authUser: authUser.id, metric, value, timestamp })
+    getIO()
+        .to(`workspace_${workspace}`)
+        .emit("datapoint:new", {
+            metric,
+            value,
+            timestamp
+        })
     return successResponse(res, 201, 'Datapoint created successfully')
 }
 

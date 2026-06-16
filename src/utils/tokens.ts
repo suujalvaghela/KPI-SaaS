@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken"
 import "dotenv/config"
 import { Response } from "express"
-import { refreshTokenInput } from "../modules/auth/auth.validation.js";
 import { AppError } from "./response.js";
 
 interface TokenPayload {
@@ -11,7 +10,7 @@ interface TokenPayload {
 }
 
 export const generateAccessToken = (payload: TokenPayload) => {
-    return jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '15m' })
+    return jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '5d' })
 }
 
 export const generateRefreshToken = (payload: TokenPayload) => {
@@ -22,7 +21,7 @@ export const verifyAccessToken = (token: string) => {
     return jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
 }
 
-export const verifyRefreshToken = ({ refreshToken }: refreshTokenInput) => {
+export const verifyRefreshToken = (refreshToken: string) => {
     if (!refreshToken) {
         const error = new Error('Refresh token is required') as AppError;
         error.statusCode = 400;
