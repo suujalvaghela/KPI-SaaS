@@ -3,7 +3,6 @@ import { iCreateMember, iGetMember, iUpdateMember, iWorkspacesMember } from "./m
 import { AppError } from "../../utils/response.js";
 import { getUserByIdDto } from "../user/user.dao.js";
 import { createMemberDto, getMemberByIdsDto, getAllMembersByWorkspaceDto, getAllWorkspacesByMemberDto, updateMemberDto } from "./membership.dao.js";
-import { updateMember } from "./membership.controller.js";
 
 export const createMemberService = async ({ mUser, workspace, role }: iCreateMember) => {
     const memberWorkspace = await getWorkspaceByidDto(workspace)
@@ -35,6 +34,8 @@ export const getAllMembersByWorkspaceService = async ({ user, workspace }: iGetM
 
     return await getAllMembersByWorkspaceDto(workspace);
 }
+
+export const getMyWorkspacesService = async () => {}
 
 export const updateMemberService = async ({ user, workspace, role }: iUpdateMember) => {
     const workspace_data = await getWorkspaceByidDto(workspace)

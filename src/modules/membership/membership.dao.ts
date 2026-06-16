@@ -2,12 +2,7 @@ import { workspace_role } from "../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 import { iCreateMember, iGetMember, iUpdateMember, iWorkspacesMember } from "./membership.type.js";
 
-export const createMemberDto = async ({
-    mUser,
-    workspace,
-    role = workspace_role.Guest
-}: iCreateMember
-) => {
+export const createMemberDto = async ({ mUser, workspace, role = workspace_role.Guest }: iCreateMember) => {
     return prisma.membership.create({
         data: {
             user: mUser,
@@ -56,6 +51,18 @@ export const getAllWorkspacesByMemberDto = async ({ authUser, user }: iWorkspace
                 }
             ],
             deletedAt: null
+        }
+    })
+}
+
+export const getMyWorkspacesDto = async (authUser: string) => {
+    return prisma.workspace.findMany({
+        where: {
+            memberships: {
+                some: {
+                    user: authUser
+                }
+            }
         }
     })
 }

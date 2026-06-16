@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken"
 import "dotenv/config"
 import { Response } from "express"
+import { refreshTokenInput } from "../modules/auth/auth.validation.js";
+import { AppError } from "./response.js";
 
 interface TokenPayload {
     id: string;
@@ -20,11 +22,16 @@ export const verifyAccessToken = (token: string) => {
     return jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
 }
 
-export const verifyRefreshToken = (token: string) => {
-    return jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as TokenPayload;
+export const verifyRefreshToken = ({ refreshToken }: refreshTokenInput) => {
+    if (!refreshToken) {
+        const error = new Error('Refresh token is required') as AppError;
+        error.statusCode = 400;
+        throw error;
+    }
+    return jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as TokenPayload
 }
 
-export const refreshTokenCookies = (res: Response, refreshToken: string) => {
+export const refreshTokenCookies = async (res: Response, refreshToken: string) => {
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

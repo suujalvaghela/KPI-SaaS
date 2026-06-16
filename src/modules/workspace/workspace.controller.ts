@@ -2,19 +2,13 @@ import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
 import { createWorkspaceService, deleteWorkspaceService, getWorkspaceByIdService, updateWorkspaceService } from "./workspace.service.js";
 import { getWorkspaceByidDto } from "./workspace.dao.js";
-import { createMemberDto, getAllWorkspacesByMemberDto, getMemberByIdsDto } from "../membership/membership.dao.js";
+import { createMemberDto, getAllWorkspacesByMemberDto } from "../membership/membership.dao.js";
 import { workspace_role } from "../../generated/prisma/enums.js";
 import { workspaceCreator } from "../membership/membership.authorization.js";
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const { body: { name } } = req;
     const authUser = req.user!
-
-    if (!name || !authUser.id) {
-        const error = new Error('Name and author are required') as AppError;
-        error.statusCode = 400;
-        throw error;
-    }
 
     const workspace = await createWorkspaceService({ name, author: authUser.id })
     await createMemberDto({ mUser: workspace.author, workspace: workspace.id, role: workspace_role.Creator })

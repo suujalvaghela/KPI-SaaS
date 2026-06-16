@@ -19,6 +19,14 @@ export const getUserByIdDto = (id: string) => {
         }
     })
 }
+export const getUserByEmailDto = (email: string) => {
+    return prisma.user.findUnique({
+        where: {
+            email,
+            deletedAt: null
+        }
+    })
+}
 
 export const getAllUsersDto = () => {
     return prisma.user.findMany({

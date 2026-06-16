@@ -1,0 +1,26 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/metric/800e91bb-c798-4a75-9baa-931109c4d0ba
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Monthly Revenue"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
