@@ -6,6 +6,13 @@ export interface iCreateMetric {
     creator: string
 }
 
+export interface iGetMetric {
+    user: string,
+    workspace: string,
+    cursor?: string,
+    limit: number
+}
+
 export interface iDeleteMetric {
     authUser: string,
     metric: string

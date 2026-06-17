@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma.js"
-import { iUpdateMetric } from "./metric.type.js"
+import { cursorPagination } from "../../utils/pagination.js"
+import { iGetMetric, iUpdateMetric } from "./metric.type.js"
 import { iCreateMetric } from "./metric.type.js"
 
 export const createMetricDto = async ({ workspace, name, description, unit, creator }: iCreateMetric) => {
@@ -14,12 +15,20 @@ export const getMetricByIdDto = async (id: string) => {
     })
 }
 
-export const getMetricsByWorkspaceDto = async (workspace: string) => {
-    return await prisma.metric.findMany({
-        where: { workspace }
+export const getMetricsByWorkspaceDto = async ({ user, workspace, cursor, limit }: iGetMetric) => {
+    const metrics = await prisma.metric.findMany({
+        where: { workspace },
+        take: limit + 1,
+        skip: cursor ? 1 : 0,
+        ...(cursor && {
+            cursor: {
+                id: cursor
+            }
+        })
     })
-}
 
+    return cursorPagination(metrics, limit)
+}
 
 export const updateMetricDto = async ({ metric, name, description, unit }: iUpdateMetric) => {
     return await prisma.metric.update({

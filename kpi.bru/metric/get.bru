@@ -1,17 +1,13 @@
 meta {
   name: get
   type: http
-  seq: 6
+  seq: 5
 }
 
 get {
-  url: {{baseUrl}}/metric/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a
+  url: {{baseUrl}}/metric/workspace/2a624885-5e1e-4232-b334-48bead850e46/2a624885-5e1e-4232-b334-48bead85462
   body: none
-  auth: bearer
-}
-
-auth:bearer {
-  token: {{accessToken}}
+  auth: inherit
 }
 
 settings {

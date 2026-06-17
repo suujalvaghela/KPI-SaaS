@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { successResponse } from "../../utils/response.js";
 import { createMemberService, getAllMembersByWorkspaceService, updateMemberService, } from "./membership.service.js";
-import { deleteMemberDto, getAllWorkspacesByMemberDto, getMyWorkspacesDto } from "./membership.dao.js";
+import { deleteMemberDto, getAllWorkspacesByMemberDto } from "./membership.dao.js";
 import { workspaceCreator } from "./membership.authorization.js";
 
 export const createMember = async (req: Request, res: Response) => {
@@ -23,21 +23,19 @@ export const createMember = async (req: Request, res: Response) => {
 export const getAllMembersByWorkspace = async (req: Request, res: Response) => {
     const authUer = req.user!;
     const workspace = req.params.workspaceId as string
-    const members = await getAllMembersByWorkspaceService({ user: authUer.id, workspace })
+    const cursor = req.query.cursor as string | undefined
+    const limit = req.query.limit ? Number(req.query.limit) : 5
+    const members = await getAllMembersByWorkspaceService({ user: authUer.id, workspace, cursor, limit })
     return successResponse(res, 200, "Members fetched successfully!", members)
 }
 
 export const getAllWorkspacesByMember = async (req: Request, res: Response) => {
     const authUser = req.user!
     const user = req.params.userId as string;
-    const workspaces = await getAllWorkspacesByMemberDto({ authUser: authUser.id, user })
+    const cursor = req.query.cursor as string | undefined
+    const limit = req.query.limit ? Number(req.query.limit) : 5
+    const workspaces = await getAllWorkspacesByMemberDto({ authUser: authUser.id, user, cursor, limit })
     return successResponse(res, 200, "workspaces fetched successfully!", workspaces)
-}
-
-export const getMyWorkspaces = async (req: Request, res: Response) => {
-    const authUser = req.user!
-    const workspaces = await getMyWorkspacesDto(authUser.id)
-    return successResponse(res, 200, "workspaces fetched successfully!", workspaces);
 }
 
 export const updateMember = async (req: Request, res: Response) => {

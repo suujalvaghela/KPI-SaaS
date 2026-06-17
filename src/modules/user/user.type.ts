@@ -9,3 +9,8 @@ export interface iDeleteUser {
     authUser: AuthenticatedUser;
     id: string;
 }
+
+export interface iGetAllUsers {
+    cursor?: string
+    limit: number
+}

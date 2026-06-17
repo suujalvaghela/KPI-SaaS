@@ -1,0 +1,31 @@
+meta {
+  name: getall
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/metric/workspace/2a624885-5e1e-4232-b334-48bead850e46?limit=1&cursor={{nextCursor}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 1
+  cursor: {{nextCursor}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  bru.setEnvVar("nextCursor", body.data.nextCursor);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

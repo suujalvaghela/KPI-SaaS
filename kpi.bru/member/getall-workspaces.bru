@@ -5,13 +5,24 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/member/user/7e72759c-4a3e-4070-8496-500c8c909a6e
+  url: {{baseUrl}}/member/user/abfb6529-e507-470c-a7ac-a9f1c3b0761f?limit=1&cursor={{nextCursor}}
   body: none
   auth: bearer
 }
 
+params:query {
+  limit: 1
+  cursor: {{nextCursor}}
+}
+
 auth:bearer {
   token: {{accessToken}}
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  bru.setEnvVar("nextCursor", body.data.nextCursor);
 }
 
 settings {

@@ -5,9 +5,20 @@ meta {
 }
 
 post {
-  url: 
-  body: none
-  auth: inherit
+  url: {{baseUrl}}/datapoint/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/metric/800e91bb-c798-4a75-9baa-931109c4d0ba
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "value":125910000,
+    "timestamp":"2026-09-10T00:00:00Z"
+  }
 }
 
 settings {

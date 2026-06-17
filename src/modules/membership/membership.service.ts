@@ -1,5 +1,5 @@
 import { getWorkspaceByidDto } from "../workspace/workspace.dao.js";
-import { iCreateMember, iGetMember, iUpdateMember, iWorkspacesMember } from "./membership.type.js";
+import { iCreateMember, iGetAllMember, iUpdateMember } from "./membership.type.js";
 import { AppError } from "../../utils/response.js";
 import { getUserByIdDto } from "../user/user.dao.js";
 import { createMemberDto, getMemberByIdsDto, getAllMembersByWorkspaceDto, getAllWorkspacesByMemberDto, updateMemberDto } from "./membership.dao.js";
@@ -23,7 +23,7 @@ export const createMemberService = async ({ mUser, workspace, role }: iCreateMem
     await createMemberDto({ mUser, workspace, role })
 }
 
-export const getAllMembersByWorkspaceService = async ({ user, workspace }: iGetMember) => {
+export const getAllMembersByWorkspaceService = async ({ user, workspace, cursor, limit }: iGetAllMember) => {
     const member = await getMemberByIdsDto({ user, workspace })
 
     if (!member) {
@@ -32,10 +32,8 @@ export const getAllMembersByWorkspaceService = async ({ user, workspace }: iGetM
         throw error
     }
 
-    return await getAllMembersByWorkspaceDto(workspace);
+    return await getAllMembersByWorkspaceDto({ user, workspace, cursor, limit });
 }
-
-export const getMyWorkspacesService = async () => {}
 
 export const updateMemberService = async ({ user, workspace, role }: iUpdateMember) => {
     const workspace_data = await getWorkspaceByidDto(workspace)

@@ -1,0 +1,31 @@
+meta {
+  name: getall
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/threshold/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/metric/800e91bb-c798-4a75-9baa-931109c4d0ba?limit=1&cursor={{nextCursor}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  limit: 1
+  cursor: {{nextCursor}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  bru.setEnvVar("nextCursor", body.data?.nextCursor);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -3,7 +3,9 @@ import { getAllUsersDto, getUserByIdDto, updateUserDto } from "./user.dao.js";
 import { clearRefreshTokenCookie } from "../../utils/tokens.js";
 import { deleteUserService } from "./user.service.js";
 export const getAllUsers = async (req, res) => {
-    const users = await getAllUsersDto();
+    const limit = req.query.limit ? Number(req.query.limit) : 5;
+    const cursor = req.query.cursor;
+    const users = await getAllUsersDto({ limit, cursor });
     return successResponse(res, 200, 'Users retrieved successfully', users);
 };
 export const updateUser = async (req, res) => {

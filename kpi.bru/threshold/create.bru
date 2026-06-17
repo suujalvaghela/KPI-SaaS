@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/threshold/workspace/8bf92491-aee8-45c1-9330-5fd912d69895/metric/800e91bb-c798-4a75-9baa-931109c4d0ba
+  url: {{baseUrl}}/threshold/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/metric/800e91bb-c798-4a75-9baa-931109c4d0ba
   body: json
   auth: bearer
 }
@@ -16,9 +16,9 @@ auth:bearer {
 
 body:json {
   {
-    "condition": "BELOW",
-    "value": 40000, 
-    "notifyUser": "darshil@7span.com" 
+    "condition": "ABOVE",
+    "value": 50000, 
+    "notifyUser": "sujal@7span.com" 
   }
 }
 
