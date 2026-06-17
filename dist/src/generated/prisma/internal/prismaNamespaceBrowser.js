@@ -90,6 +90,7 @@ export const WorkspaceScalarFieldEnum = {
     deletedAt: 'deletedAt'
 };
 export const MembershipScalarFieldEnum = {
+    id: 'id',
     user: 'user',
     workspace: 'workspace',
     role: 'role',
@@ -111,6 +112,7 @@ export const DatapointScalarFieldEnum = {
     metric: 'metric',
     value: 'value',
     timestamp: 'timestamp',
+    creator: 'creator',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -119,7 +121,9 @@ export const ThresholdScalarFieldEnum = {
     metric: 'metric',
     condition: 'condition',
     value: 'value',
+    workspace: 'workspace',
     notifyUser: 'notifyUser',
+    createdBy: 'createdBy',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -129,7 +133,8 @@ export const NotificationScalarFieldEnum = {
     workspace: 'workspace',
     message: 'message',
     isRead: 'isRead',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 export const SortOrder = {
     asc: 'asc',

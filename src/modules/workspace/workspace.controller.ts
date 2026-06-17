@@ -2,9 +2,10 @@ import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
 import { createWorkspaceService, deleteWorkspaceService, getWorkspaceByIdService, updateWorkspaceService } from "./workspace.service.js";
 import { getWorkspaceByidDto } from "./workspace.dao.js";
-import { createMemberDto, getAllWorkspacesByMemberDto } from "../membership/membership.dao.js";
+import { createMemberDto } from "../membership/membership.dao.js";
 import { workspace_role } from "../../generated/prisma/enums.js";
 import { workspaceCreator } from "../membership/membership.authorization.js";
+import { getMyWorkspacesDto } from "./workspace.dao.js";
 
 export const createWorkspace = async (req: Request, res: Response) => {
     const { body: { name } } = req;
@@ -16,10 +17,12 @@ export const createWorkspace = async (req: Request, res: Response) => {
     return successResponse(res, 201, 'Workspace created successfully');
 }
 
-export const getAllWorkspace = async (req: Request, res: Response) => {
+export const getMyWorkspaces = async (req: Request, res: Response) => {
     const authUser = req.user!
-    const workspaces = await getAllWorkspacesByMemberDto({ authUser: authUser.id, user: authUser.id })
-    return successResponse(res, 200, 'Workspaces retrieved successfully', workspaces)
+    const cursor = req.query.cursor as string | undefined
+    const limit = req.query.limit ? Number(req.query.limit) : 5
+    const workspaces = await getMyWorkspacesDto({ authUser: authUser.id, cursor, limit })
+    return successResponse(res, 200, "workspaces fetched successfully!", workspaces);
 }
 
 export const getWorkspaceByid = async (req: Request, res: Response) => {

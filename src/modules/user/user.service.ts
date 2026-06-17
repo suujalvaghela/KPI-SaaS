@@ -6,7 +6,7 @@ import { deleteUserDto } from "./user.dao.js";
 export const deleteUserService = async ({ authUser, id }: iDeleteUser) => {
     const adminRole = await prisma.role.findUnique({
         where: {
-            id: authUser.id,
+            id: authUser.role,
         }
     })
     if (authUser.id !== id && adminRole?.name !== 'ADMIN') {

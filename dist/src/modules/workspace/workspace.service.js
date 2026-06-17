@@ -1,5 +1,6 @@
 import { createWorkspaceDto, deleteWorkspaceDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js";
 import { getUserByIdDto } from "../user/user.dao.js";
+import { getMemberByIdsDto } from "../membership/membership.dao.js";
 export const createWorkspaceService = async ({ name, author }) => {
     const user = await getUserByIdDto(author);
     if (!user) {
@@ -15,19 +16,23 @@ export const createWorkspaceService = async ({ name, author }) => {
     }
     return workspace;
 };
-export const updateWorkspaceService = async (authUser, { id, name }) => {
-    const workspace = await getWorkspaceByidDto(id);
-    if (!workspace) {
+export const getWorkspaceByIdService = async ({ user, workspace }) => {
+    const member = await getMemberByIdsDto({ user, workspace });
+    if (!member) {
+        const error = new Error('You are not a part of this workspace!');
+        error.statusCode = 404;
+        throw error;
+    }
+    return await getWorkspaceByidDto(workspace);
+};
+export const updateWorkspaceService = async ({ workspace, name }) => {
+    const workspace_data = await getWorkspaceByidDto(workspace);
+    if (!workspace_data) {
         const error = new Error('workspace does not existing');
         error.statusCode = 403;
         throw error;
     }
-    if (workspace?.author !== authUser.id) {
-        const error = new Error('Forbidden: You can update only your own workspace');
-        error.statusCode = 403;
-        throw error;
-    }
-    await updateWorkspaceDto({ id, name });
+    await updateWorkspaceDto({ workspace, name });
 };
 export const deleteWorkspaceService = async (authUser, id) => {
     const workspace = await getWorkspaceByidDto(id);

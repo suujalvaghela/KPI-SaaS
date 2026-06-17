@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma.js"
-import { iUpdateUser } from "./user.type.js"
+import { cursorPagination } from "../../utils/pagination.js"
+import { iGetAllUsers, iUpdateUser } from "./user.type.js"
 
 export const updateUserDto = ({ id, name }: iUpdateUser) => {
     return prisma.user.update({
@@ -12,7 +13,7 @@ export const updateUserDto = ({ id, name }: iUpdateUser) => {
 }
 
 export const getUserByIdDto = (id: string) => {
-    return prisma.user.findUnique({
+    return prisma.user.findFirst({
         where: {
             id,
             deletedAt: null
@@ -20,7 +21,7 @@ export const getUserByIdDto = (id: string) => {
     })
 }
 export const getUserByEmailDto = (email: string) => {
-    return prisma.user.findUnique({
+    return prisma.user.findFirst({
         where: {
             email,
             deletedAt: null
@@ -28,12 +29,20 @@ export const getUserByEmailDto = (email: string) => {
     })
 }
 
-export const getAllUsersDto = () => {
-    return prisma.user.findMany({
+export const getAllUsersDto = async ({ cursor, limit }: iGetAllUsers) => {
+    const users = await prisma.user.findMany({
         where: {
             deletedAt: null
-        }
+        },
+        take: limit + 1,
+        skip: cursor ? 1 : 0,
+        ...(cursor && {
+            cursor: {
+                id: cursor
+            }
+        })
     })
+    return cursorPagination(users, limit)
 }
 
 export const deleteUserDto = (id: string) => {

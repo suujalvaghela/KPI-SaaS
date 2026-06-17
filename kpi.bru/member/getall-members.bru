@@ -5,13 +5,24 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/member/workspace/8bf92491-aee8-45c1-9330-5fd912d69895
+  url: {{baseUrl}}/member/workspace/2a624885-5e1e-4232-b334-48bead850e46?limit=1&cursor={{nextCursor}}
   body: none
   auth: bearer
 }
 
+params:query {
+  limit: 1
+  cursor: {{nextCursor}}
+}
+
 auth:bearer {
   token: {{accessToken}}
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  bru.setEnvVar("nextCursor", body.data.nextCursor);
 }
 
 settings {

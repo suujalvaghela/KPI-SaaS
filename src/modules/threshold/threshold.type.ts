@@ -11,12 +11,22 @@ export interface iCreateThreshold {
 
 export interface iGetThresholds {
     metric: string,
-    user: string
+    user: string,
+    cursor?: string,
+    limit: number
 }
 
 export interface iUpdateThreshold {
+    authUser: string,
     threshold: string,
+    workspace: string,
     condition?: threshold_condition,
     value?: number,
     notifyUser?: string
+}
+
+export interface iDeleteThreshold {
+    authUser: string,
+    threshold: string,
+    workspace: string
 }

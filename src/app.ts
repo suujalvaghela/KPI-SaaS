@@ -8,6 +8,7 @@ import { memberRoute } from "./modules/membership/membership.route.js";
 import { metricRoute } from "./modules/metric/metric.route.js";
 import { datapointRoute } from "./modules/datapoint/datapoint.route.js";
 import { thresholdRoute } from "./modules/threshold/threshold.route.js";
+import { notificationRoute } from "./modules/notification/notification.route.js";
 import { Request, Response, NextFunction } from "express";
 import { errorResponse } from "./utils/response.js";
 
@@ -24,6 +25,7 @@ app.use('/api/member', memberRoute);
 app.use('/api/metric', metricRoute);
 app.use('/api/datapoint', datapointRoute);
 app.use('/api/threshold', thresholdRoute);
+app.use('/api/notification', notificationRoute);
 
 app.use((error: Error & { statusCode?: number }, req: Request, res: Response, next: NextFunction) => {
     return errorResponse(res, error.statusCode ?? 500, error)

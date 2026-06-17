@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma.js"
-import { iCreateDatapoint } from "./datapoint.type.js"
+import { cursorPagination } from "../../utils/pagination.js"
+import { iCreateDatapoint, iGetDatapoints } from "./datapoint.type.js"
 
 export const createDatapointDao = async ({ authUser, metric, value, timestamp }: iCreateDatapoint) => {
     return await prisma.datapoint.create({
@@ -12,8 +13,8 @@ export const createDatapointDao = async ({ authUser, metric, value, timestamp }:
     })
 }
 
-export const getDatapointsByMetricDao = async (metric: string) => {
-    return await prisma.datapoint.findMany({
+export const getDatapointsByMetricDao = async ({ metric, user, cursor, limit }: iGetDatapoints) => {
+    const datapoints = await prisma.datapoint.findMany({
         where: { metric },
         orderBy: { timestamp: 'desc' },
         select: {
@@ -29,8 +30,17 @@ export const getDatapointsByMetricDao = async (metric: string) => {
             timestamp: true,
             createdAt: true,
             updatedAt: true
-        }
+        },
+        take: limit + 1,
+        skip: cursor ? 1 : 0,
+        ...(cursor && {
+            cursor: {
+                id: cursor
+            }
+        })
     })
+
+    return cursorPagination(datapoints, limit)
 }
 
 export const getDatapointByIdDao = async (id: string) => {

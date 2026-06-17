@@ -16,9 +16,11 @@ export const createMetric = async (req: Request, res: Response) => {
 }
 
 export const getMetricsByWorkspace = async (req: Request, res: Response) => {
+    const cursor = req.query.cursor as string | undefined
+    const limit = req.query.limit ? Number(req.query.limit) : 5
     const authUser = req.user!
     const workspace = req.params.workspaceId as string
-    const metrics = await getMetricsByWorkspaceService({ user: authUser.id, workspace })
+    const metrics = await getMetricsByWorkspaceService({ user: authUser.id, workspace, cursor, limit })
     return successResponse(res, 200, 'Metrics fetched successfully', metrics)
 }
 
@@ -30,7 +32,7 @@ export const getMetricsById = async (req: Request, res: Response) => {
         error.statusCode = 400;
         throw error;
     }
-    return successResponse(res, 200, 'Metric fetched successfully', metric)
+    return successResponse(res, 200, 'Metric fetched successfully', metric_data)
 }
 
 export const updateMetric = async (req: Request, res: Response) => {

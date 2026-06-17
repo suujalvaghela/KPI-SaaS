@@ -2,7 +2,14 @@ import { workspace_role } from "../../generated/prisma/enums.js"
 
 export interface iGetMember {
     user: string,
-    workspace: string
+    workspace: string,
+}
+
+export interface iGetAllMember {
+    user: string,
+    workspace: string,
+    cursor?: string,
+    limit: number,
 }
 export interface iDeleteMember {
     user: string,
@@ -23,9 +30,4 @@ export interface iCreateMember {
 export interface iMemberCreator {
     authUser: string,
     workspace: string
-}
-
-export interface iWorkspacesMember {
-    authUser: string,
-    user: string
 }

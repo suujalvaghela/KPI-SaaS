@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { successResponse } from "../../utils/response.js"
-import { createThresholdService, getThresholdsByMetricService, updateThresholdService } from "./threshold.service.js"
-import { deleteThresholdDto } from "./threshold.dao.js"
+import { createThresholdService, deleteThresholdService, getThresholdsByMetricService, updateThresholdService } from "./threshold.service.js"
 import { workspaceCreator } from "../membership/membership.authorization.js"
 
 export const createThreshold = async (req: Request, res: Response) => {
@@ -18,8 +17,10 @@ export const createThreshold = async (req: Request, res: Response) => {
 export const getThresholdsByMetric = async (req: Request, res: Response) => {
     const metric = req.params.metricId as string
     const authUser = req.user!
+    const cursor = req.query.cursor as string | undefined
+    const limit = req.query.limit ? Number(req.query.limit) : 5
 
-    const thresholds = await getThresholdsByMetricService({ metric, user: authUser.id })
+    const thresholds = await getThresholdsByMetricService({ metric, user: authUser.id, cursor, limit })
     return successResponse(res, 200, 'Thresholds fetched successfully', thresholds)
 }
 
@@ -29,8 +30,7 @@ export const updateThreshold = async (req: Request, res: Response) => {
     const { condition, value, notifyUser } = req.body
     const authUser = req.user!
 
-    await workspaceCreator({ authUser: authUser.id, workspace })
-    await updateThresholdService({ threshold, condition, value, notifyUser })
+    await updateThresholdService({ authUser: authUser.id, threshold, workspace, condition, value, notifyUser })
     return successResponse(res, 200, 'Threshold updated successfully')
 }
 
@@ -39,7 +39,6 @@ export const deleteThreshold = async (req: Request, res: Response) => {
     const workspace = req.params.workspaceId as string
     const authUser = req.user!
 
-    await workspaceCreator({ authUser: authUser.id, workspace })
-    await deleteThresholdDto(threshold)
+    await deleteThresholdService({ authUser: authUser.id, threshold, workspace })
     return successResponse(res, 200, 'Threshold deleted successfully')
 }

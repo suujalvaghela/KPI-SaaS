@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createWorkspace, deleteWorkspace, getAllWorkspace, getWorkspaceByid, updateWorkspace } from "./workspace.controller.js";
+import { createWorkspace, deleteWorkspace, getMyWorkspaces, getWorkspaceByid, updateWorkspace } from "./workspace.controller.js";
 import { authenticationMiddlewear } from "../../middlewares/authentication.js";
 import { authorizationMiddlewear } from "../../middlewares/authorization.js";
 import { validate } from "../../middlewares/validation.js";
@@ -15,7 +15,10 @@ router.route('/')
         authorizationMiddlewear("workspaces", "create"),
         createWorkspace
     )
-    .get(getAllWorkspace)
+
+router.route('/me').get(
+    getMyWorkspaces
+);
 
 router.route('/:id')
     .get(getWorkspaceByid)

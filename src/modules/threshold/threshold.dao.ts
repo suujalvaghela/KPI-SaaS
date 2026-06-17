@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma.js"
-import { iUpdateThreshold } from "./threshold.type.js"
+import { cursorPagination } from "../../utils/pagination.js"
+import { iGetThresholds, iUpdateThreshold } from "./threshold.type.js"
 import { iCreateThreshold } from "./threshold.type.js"
 
 export const createThresholdDao = async ({ metric, condition, workspace, value, notifyUser, createdBy }: iCreateThreshold) => {
@@ -8,10 +9,25 @@ export const createThresholdDao = async ({ metric, condition, workspace, value, 
     })
 }
 
-export const getThresholdsByMetricDao = async (metric: string) => {
+export const getThresholdsByMetricDao = async ({ metric, user, cursor, limit }: iGetThresholds) => {
+    const thresholds = await prisma.threshold.findMany({
+        where: { metric },
+        orderBy: { createdAt: 'desc' },
+        take: limit + 1,
+        skip: cursor ? 1 : 0,
+        ...(cursor && {
+            cursor: {
+                id: cursor
+            }
+        })
+    })
+    return cursorPagination(thresholds, limit)
+}
+
+export const getThresholdsByMetricDao2 = async (metric: string) => {
     return await prisma.threshold.findMany({
         where: { metric },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
     })
 }
 
@@ -21,7 +37,7 @@ export const getThresholdByIdDao = async (id: string) => {
     })
 }
 
-export const updateThresholdDto = async ({ threshold, condition, value, notifyUser }: iUpdateThreshold) => {
+export const updateThresholdDto = async ({ authUser, threshold, workspace, condition, value, notifyUser }: iUpdateThreshold) => {
     return await prisma.threshold.update({
         where: { id: threshold },
         data: { condition, value, notifyUser }
