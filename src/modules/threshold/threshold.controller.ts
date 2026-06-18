@@ -4,9 +4,9 @@ import { createThresholdService, deleteThresholdService, getThresholdsByMetricSe
 import { workspaceCreator } from "../membership/membership.authorization.js"
 
 export const createThreshold = async (req: Request, res: Response) => {
-    const { condition, value, notifyUser } = req.body
     const metric = req.params.metricId as string
     const workspace = req.params.workspaceId as string
+    const { condition, value, notifyUser } = req.body
     const authUser = req.user!
 
     await workspaceCreator({ authUser: authUser.id, workspace })

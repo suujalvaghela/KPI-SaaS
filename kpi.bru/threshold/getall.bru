@@ -5,14 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/threshold/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/metric/800e91bb-c798-4a75-9baa-931109c4d0ba?limit=1&cursor={{nextCursor}}
+  url: {{baseUrl}}/threshold/metric/26f6137e-60c7-4fd1-a9af-18108df9028a?limit=1
   body: none
   auth: bearer
 }
 
 params:query {
   limit: 1
-  cursor: {{nextCursor}}
+  ~cursor: {{nextCursor}}
 }
 
 auth:bearer {

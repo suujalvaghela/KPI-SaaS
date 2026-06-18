@@ -2,7 +2,8 @@ export interface iCreateDatapoint {
     authUser: string,
     metric: string,
     value: number,
-    timestamp: string | Date
+    timestamp: string | Date,
+    workspace: string
 }
 
 export interface iDeleteDatapoint {

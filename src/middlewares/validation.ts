@@ -1,10 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError, ZodType } from "zod";
 
-export const validate = (schema: ZodType) => {
+export const validate = (schema: ZodType, source: 'body' | 'query' | 'params' = 'body') => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
-            req.body = schema.parse(req.body || {})
+            const parsed = schema.parse(req[source] || {})
+            if (source === 'query' || source === 'params') {
+                Object.assign(req[source], parsed);
+            }
+            else {
+                req.body = parsed;
+            }
             next()
         } catch (error) {
             if (error instanceof ZodError) {
