@@ -22,9 +22,9 @@ export const updateUser = async (req: Request, res: Response) => {
         throw error;
     }
 
-    const user = await updateUserDto({ id, name });
+    await updateUserDto({ id, name });
 
-    return successResponse(res, 200, 'User updated successfully', user);
+    return successResponse(res, 200, 'User updated successfully');
 }
 
 export const getUserById = async (req: Request, res: Response) => {

@@ -8,7 +8,7 @@ export const handleGoogleAuth = async (req: Request, res: Response) => {
     const { idToken } = req.body;
     const { refreshToken, accessToken } = await authenticateGoogleUser(idToken)
     await refreshTokenCookies(res, refreshToken)
-    return successResponse(res, 200, 'Authentication successful', { accessToken, refreshToken })
+    return successResponse(res, 200, 'Authentication successful', { accessToken })
 }
 
 export const rotateTokens = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export const rotateTokens = async (req: Request, res: Response) => {
     }
     const tokens = await refreshSessionTokens(refreshToken)
     refreshTokenCookies(res, tokens.refreshToken);
-    return successResponse(res, 200, 'Tokens refreshed successfully', { refreshToken: tokens.refreshToken, accessToken: tokens.accessToken });
+    return successResponse(res, 200, 'Tokens refreshed successfully', { refreshToken: tokens.refreshToken });
 }
 
 export const logoutUser = async (req: Request, res: Response) => {

@@ -24,7 +24,7 @@ export const getMetricsByWorkspace = async (req: Request, res: Response) => {
     return successResponse(res, 200, 'Metrics fetched successfully', metrics)
 }
 
-export const getMetricsById = async (req: Request, res: Response) => {
+export const getMetricById = async (req: Request, res: Response) => {
     const metric = req.params.metricId as string
     const metric_data = await getMetricByIdDto(metric)
     if (!metric_data) {

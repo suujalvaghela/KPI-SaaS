@@ -11,7 +11,7 @@ export const createDatapoint = async (req: Request, res: Response) => {
     const workspace = req.params.workspaceId as string
     const authUser = req.user!
 
-    await createDatapointService({ authUser: authUser.id, metric, value, timestamp })
+    await createDatapointService({ authUser: authUser.id, metric, value, timestamp, workspace })
     getIO()
         .to(`workspace_${workspace}`)
         .emit("datapoint:new", { metric, value, timestamp })

@@ -5,14 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/workspace/me?limit=1&cursor={{nextCursor}}
+  url: {{baseUrl}}/workspace/me?limit=2
   body: none
   auth: bearer
 }
 
 params:query {
-  limit: 1
-  cursor: {{nextCursor}}
+  limit: 2
+  ~cursor: {{nextCursor}}
 }
 
 auth:bearer {
@@ -22,7 +22,7 @@ auth:bearer {
 script:post-response {
   const body = res.getBody();
   
-  bru.setEnvVar("nextCursor", body.data.nextCursor);
+  bru.setEnvVar("nextCursor", body.data?.nextCursor);
 }
 
 settings {

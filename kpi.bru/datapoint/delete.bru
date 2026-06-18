@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: 
+  url: {{baseUrl}}/datapoint/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/84b3d7e8-7584-485d-8474-fc527f70f574
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }
 
 settings {

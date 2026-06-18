@@ -5,14 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/datapoint/workspace/6b567f21-e016-4a1f-81ce-7ec435024f0a/metric/800e91bb-c798-4a75-9baa-931109c4d0ba?limit=10&cursor={{nextCursor}}
+  url: {{baseUrl}}/datapoint/metric/800e91bb-c798-4a75-9baa-931109c4d0ba?limit=10
   body: none
   auth: bearer
 }
 
 params:query {
   limit: 10
-  cursor: {{nextCursor}}
+  ~cursor: {{nextCursor}}
 }
 
 auth:bearer {
@@ -22,7 +22,7 @@ auth:bearer {
 script:post-response {
   const body = res.getBody();
   
-  bru.setEnvVar("nextCursor", body.data.nextCursor);
+  bru.setEnvVar("nextCursor", body.data?.nextCursor);
 }
 
 settings {
