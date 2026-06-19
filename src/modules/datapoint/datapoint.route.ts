@@ -2,7 +2,7 @@ import { Router } from "express"
 import { createDatapoint, getDatapointsByMetric, deleteDatapoint } from "./datapoint.controller.js"
 import { authenticationMiddlewear } from "../../middlewares/authentication.js"
 import { validate } from "../../middlewares/validation.js"
-import { createDatapointParams, createDatapointSchema, datapointQuery, deleteDatapointParams, getDatapointParams } from "./datapoint.validation.js"
+import { createDatapointParams, createDatapointSchema, datapointQuery, deleteDatapointParams, getDatapointParams } from "./datapoint.validate.js"
 
 const router = Router()
 

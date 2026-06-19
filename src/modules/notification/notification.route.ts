@@ -2,7 +2,7 @@ import { Router } from "express"
 import { authenticationMiddlewear } from "../../middlewares/authentication.js"
 import { validate } from "../../middlewares/validation.js"
 import { deleteNotification, getNotification, updateNotification } from "./notification.controller.js"
-import { notificationQuery, notificationParams, updateNotificationSchema } from "./notification.validation.js"
+import { notificationQuery, notificationParams, updateNotificationSchema } from "./notification.validate.js"
 
 const router = Router()
 

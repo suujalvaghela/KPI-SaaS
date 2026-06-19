@@ -2,7 +2,7 @@ import { Router } from "express";
 import { deleteUser, getAllUsers, getUserById, updateUser } from "./user.controller.js";
 import { authenticationMiddlewear } from "../../middlewares/authentication.js";
 import { validate } from "../../middlewares/validation.js";
-import { updateUserSchema, userParams, userQuery } from "./user.validation.js";
+import { updateUserSchema, userParams, userQuery } from "./user.validate.js";
 
 const router = Router()
 

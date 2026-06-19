@@ -1,3 +1,5 @@
+import { workspace_plan } from "../../generated/prisma/enums.js"
+
 export interface iWorkspace {
     name: string,
     author: string
@@ -5,7 +7,8 @@ export interface iWorkspace {
 
 export interface iUpdateWorkspace {
     workspace: string,
-    name: string
+    name?: string,
+    plan?: workspace_plan
 }
 
 export interface iWorkspacesMember {

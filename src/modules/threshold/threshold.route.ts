@@ -2,7 +2,7 @@ import { Router } from "express"
 import { createThreshold, getThresholdsByMetric, updateThreshold, deleteThreshold } from "./threshold.controller.js"
 import { authenticationMiddlewear } from "../../middlewares/authentication.js"
 import { validate } from "../../middlewares/validation.js"
-import { createThresholdParams, createThresholdSchema, getThresholdParams, updateThresholdParams, deleteThresholdParams, thresholdQuery, updateThresholdSchema } from "./threshold.validation.js"
+import { createThresholdParams, createThresholdSchema, getThresholdParams, updateThresholdParams, deleteThresholdParams, thresholdQuery, updateThresholdSchema } from "./threshold.validate.js"
 
 const router = Router()
 
