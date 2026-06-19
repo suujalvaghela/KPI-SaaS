@@ -12,9 +12,26 @@ enum workspace_role {
   Guest
 }
 
+enum workspace_plan {
+  free
+  pro
+}
+
+enum payment_event {
+  order_created
+  payment_success
+  payment_failed
+}
+
 enum threshold_condition {
   ABOVE
   BELOW
+}
+
+enum subscription_status {
+  pending
+  failed
+  paid
 }
 
 model Role {
@@ -40,25 +57,23 @@ model Policy {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  googleId      String?        @unique @map("google_id")
-  email         String         @unique
-  name          String
-  avatar        String?
-  roles         Role           @relation(fields: [role], references: [id])
-  role          String
-  memberships   Membership[]
-  notifications Notification[]
-  workspaces    Workspace[]
-  metrics       Metric[]
-  datapoints    Datapoint[]
-
-  createdThresholds  Threshold[] @relation("ThresholdNotifyUser")
-  notifiedThresholds Threshold[] @relation("ThresholdCreator")
-
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+  id                 String         @id @default(uuid())
+  googleId           String?        @unique @map("google_id")
+  email              String         @unique
+  name               String
+  avatar             String?
+  roles              Role           @relation(fields: [role], references: [id])
+  role               String
+  memberships        Membership[]
+  notifications      Notification[]
+  workspaces         Workspace[]
+  metrics            Metric[]
+  datapoints         Datapoint[]
+  createdThresholds  Threshold[]    @relation("ThresholdNotifyUser")
+  notifiedThresholds Threshold[]    @relation("ThresholdCreator")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  deletedAt          DateTime?      @map("deleted_at")
 
   @@map("users")
 }
@@ -68,6 +83,7 @@ model Workspace {
   name          String
   user          User           @relation(fields: [author], references: [id])
   author        String
+  plan          workspace_plan @default(free)
   memberships   Membership[]
   metrics       Metric[]
   createdAt     DateTime       @default(now()) @map("created_at")
@@ -75,6 +91,7 @@ model Workspace {
   deletedAt     DateTime?      @map("deleted_at")
   notifications Notification[]
   thresholds    Threshold[]
+  subscriptions Subscription[]
 
   @@unique([name, author])
   @@map("workspaces")
@@ -126,23 +143,19 @@ model Datapoint {
 }
 
 model Threshold {
-  id        String              @id @default(uuid())
-  metrics   Metric              @relation(fields: [metric], references: [id])
-  metric    String
-  condition threshold_condition
-  value     Decimal
-
-  workspaces Workspace @relation(fields: [workspace], references: [id])
+  id         String              @id @default(uuid())
+  metrics    Metric              @relation(fields: [metric], references: [id])
+  metric     String
+  condition  threshold_condition
+  value      Decimal
+  workspaces Workspace           @relation(fields: [workspace], references: [id])
   workspace  String
-
-  user       User   @relation("ThresholdNotifyUser", fields: [notifyUser], references: [email])
-  notifyUser String @map("notify_user")
-
-  creator   User   @relation("ThresholdCreator", fields: [createdBy], references: [id])
-  createdBy String @map("created_by")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  user       User                @relation("ThresholdNotifyUser", fields: [notifyUser], references: [email])
+  notifyUser String              @map("notify_user")
+  creator    User                @relation("ThresholdCreator", fields: [createdBy], references: [id])
+  createdBy  String              @map("created_by")
+  createdAt  DateTime            @default(now()) @map("created_at")
+  updatedAt  DateTime            @updatedAt @map("updated_at")
 
   @@map("thresholds")
 }
@@ -159,4 +172,34 @@ model Notification {
   updatedAt  DateTime  @updatedAt @map("updated_at")
 
   @@map("notifications")
+}
+
+model Subscription {
+  id              String              @id @default(uuid())
+  workspaces      Workspace           @relation(fields: [workspace], references: [id])
+  workspace       String
+  razorpayOrder   String              @unique @map("razorpay_order")
+  razorpayPayment String?             @unique @map("razorpay_payment")
+  amount          Int
+  currency        String              @default("INR")
+  status          subscription_status @default(pending)
+  nextBillingDate DateTime?           @map("next_billing_date")
+  paymentEvents   paymentEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
+}
+
+model paymentEvent {
+  id            String        @id @default(uuid())
+  subscriptions Subscription  @relation(fields: [subscription], references: [id])
+  subscription  String
+  eventType     payment_event @map("event_type")
+  razorpayEvent String?       @map("razorpay_event")
+  details       Json
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  @@map("payment_events")
 }
