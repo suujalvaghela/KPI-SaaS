@@ -20,7 +20,7 @@ export const rotateTokens = async (req: Request, res: Response) => {
     }
     const tokens = await refreshSessionTokens(refreshToken)
     refreshTokenCookies(res, tokens.refreshToken);
-    return successResponse(res, 200, 'Tokens refreshed successfully', { refreshToken: tokens.refreshToken });
+    return successResponse(res, 200, 'Tokens refreshed successfully', { accessToken: tokens.accessToken });
 }
 
 export const logoutUser = async (req: Request, res: Response) => {

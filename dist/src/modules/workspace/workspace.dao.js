@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma.js";
 import { cursorPagination } from "../../utils/pagination.js";
-export const createWorkspaceDto = ({ name, author }) => {
+export const createWorkspaceDao = ({ name, author }) => {
     return prisma.workspace.create({
         data: {
             name,
@@ -8,7 +8,7 @@ export const createWorkspaceDto = ({ name, author }) => {
         }
     });
 };
-export const getMyWorkspacesDto = async ({ authUser, cursor, limit }) => {
+export const getMyWorkspacesDao = async ({ authUser, cursor, limit }) => {
     const workspaces = await prisma.workspace.findMany({
         where: {
             memberships: {
@@ -28,7 +28,7 @@ export const getMyWorkspacesDto = async ({ authUser, cursor, limit }) => {
     });
     return cursorPagination(workspaces, limit);
 };
-export const getWorkspaceByidDto = async (workspace) => {
+export const getWorkspaceByidDao = async (workspace) => {
     return prisma.workspace.findFirst({
         where: {
             id: workspace,
@@ -36,13 +36,13 @@ export const getWorkspaceByidDto = async (workspace) => {
         }
     });
 };
-export const updateWorkspaceDto = ({ workspace, name }) => {
+export const updateWorkspaceDao = ({ workspace, name }) => {
     return prisma.workspace.update({
         where: { id: workspace },
         data: { name }
     });
 };
-export const deleteWorkspaceDto = (id) => {
+export const deleteWorkspaceDao = (id) => {
     return prisma.workspace.update({
         where: { id },
         data: {

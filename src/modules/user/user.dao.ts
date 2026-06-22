@@ -2,7 +2,7 @@ import { prisma } from "../../lib/prisma.js"
 import { cursorPagination } from "../../utils/pagination.js"
 import { iGetAllUsers, iUpdateUser } from "./user.type.js"
 
-export const updateUserDto = ({ id, name }: iUpdateUser) => {
+export const updateUserDao = ({ id, name }: iUpdateUser) => {
     return prisma.user.update({
         where: {
             id,
@@ -12,7 +12,7 @@ export const updateUserDto = ({ id, name }: iUpdateUser) => {
     })
 }
 
-export const getUserByIdDto = (id: string) => {
+export const getUserByIdDao = (id: string) => {
     return prisma.user.findFirst({
         where: {
             id,
@@ -20,7 +20,7 @@ export const getUserByIdDto = (id: string) => {
         }
     })
 }
-export const getUserByEmailDto = (email: string) => {
+export const getUserByEmailDao = (email: string) => {
     return prisma.user.findFirst({
         where: {
             email,
@@ -29,7 +29,7 @@ export const getUserByEmailDto = (email: string) => {
     })
 }
 
-export const getAllUsersDto = async ({ cursor, limit }: iGetAllUsers) => {
+export const getAllUsersDao = async ({ cursor, limit }: iGetAllUsers) => {
     const users = await prisma.user.findMany({
         where: {
             deletedAt: null
@@ -45,7 +45,7 @@ export const getAllUsersDto = async ({ cursor, limit }: iGetAllUsers) => {
     return cursorPagination(users, limit)
 }
 
-export const deleteUserDto = (id: string) => {
+export const deleteUserDao = (id: string) => {
     return prisma.user.update({
         where: { id },
         data: {

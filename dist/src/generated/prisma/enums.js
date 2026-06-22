@@ -11,7 +11,21 @@ export const workspace_role = {
     Creator: 'Creator',
     Guest: 'Guest'
 };
+export const workspace_plan = {
+    free: 'free',
+    pro: 'pro'
+};
+export const payment_event = {
+    order_created: 'order_created',
+    payment_success: 'payment_success',
+    payment_failed: 'payment_failed'
+};
 export const threshold_condition = {
     ABOVE: 'ABOVE',
     BELOW: 'BELOW'
+};
+export const subscription_status = {
+    pending: 'pending',
+    failed: 'failed',
+    paid: 'paid'
 };

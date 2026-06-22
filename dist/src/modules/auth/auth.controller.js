@@ -3,10 +3,10 @@ import { authenticateGoogleUser, getUserProfile, refreshSessionTokens } from "./
 import 'dotenv/config';
 import { refreshTokenCookies, clearRefreshTokenCookie } from "../../utils/tokens.js";
 export const handleGoogleAuth = async (req, res) => {
-    const { idToken } = req.body;
-    const { refreshToken, accessToken } = await authenticateGoogleUser(idToken);
+    const { iDaoken } = req.body;
+    const { refreshToken, accessToken } = await authenticateGoogleUser(iDaoken);
     await refreshTokenCookies(res, refreshToken);
-    return successResponse(res, 200, 'Authentication successful', { accessToken, refreshToken });
+    return successResponse(res, 200, 'Authentication successful', { accessToken });
 };
 export const rotateTokens = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken ?? req.body?.refreshToken;
@@ -17,7 +17,7 @@ export const rotateTokens = async (req, res) => {
     }
     const tokens = await refreshSessionTokens(refreshToken);
     refreshTokenCookies(res, tokens.refreshToken);
-    return successResponse(res, 200, 'Tokens refreshed successfully', { refreshToken: tokens.refreshToken, accessToken: tokens.accessToken });
+    return successResponse(res, 200, 'Tokens refreshed successfully', { accessToken: tokens.accessToken });
 };
 export const logoutUser = async (req, res) => {
     const { cookies: { refreshToken } } = req;

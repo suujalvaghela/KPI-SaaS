@@ -30,13 +30,13 @@ export const getThresholdByIdDao = async (id) => {
         where: { id }
     });
 };
-export const updateThresholdDto = async ({ authUser, threshold, workspace, condition, value, notifyUser }) => {
+export const updateThresholdDao = async ({ authUser, threshold, workspace, condition, value, notifyUser }) => {
     return await prisma.threshold.update({
         where: { id: threshold },
         data: { condition, value, notifyUser }
     });
 };
-export const deleteThresholdDto = async (threshold) => {
+export const deleteThresholdDao = async (threshold) => {
     return await prisma.threshold.delete({
         where: { id: threshold }
     });

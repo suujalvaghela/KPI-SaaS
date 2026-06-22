@@ -4,7 +4,7 @@ import { cursorPagination } from "../../utils/pagination.js";
 import { iCreateMember, iGetMember, iUpdateMember, iDeleteMember, iGetAllMember } from "./membership.type.js";
 import { iWorkspacesMember } from "../workspace/workspace.type.js";
 
-export const createMemberDto = async ({ mUser, workspace, role = workspace_role.Guest }: iCreateMember) => {
+export const createMemberDao = async ({ mUser, workspace, role = workspace_role.GUEST }: iCreateMember) => {
     return prisma.membership.create({
         data: {
             user: mUser,
@@ -14,7 +14,7 @@ export const createMemberDto = async ({ mUser, workspace, role = workspace_role.
     })
 }
 
-export const getMemberByIdsDto = async ({ user, workspace }: iGetMember) => {
+export const getMemberByIdsDao = async ({ user, workspace }: iGetMember) => {
     return prisma.membership.findUnique({
         where: {
             user_workspace: {
@@ -25,7 +25,7 @@ export const getMemberByIdsDto = async ({ user, workspace }: iGetMember) => {
     })
 }
 
-export const getAllMembersByWorkspaceDto = async ({ user, workspace, cursor, limit }: iGetAllMember) => {
+export const getAllMembersByWorkspaceDao = async ({ user, workspace, cursor, limit }: iGetAllMember) => {
     const members = await prisma.membership.findMany({
         where: {
             workspace
@@ -42,7 +42,7 @@ export const getAllMembersByWorkspaceDto = async ({ user, workspace, cursor, lim
     return cursorPagination(members, limit)
 }
 
-export const getAllWorkspacesByMemberDto = async ({ authUser, user, cursor, limit }: iWorkspacesMember) => {
+export const getAllWorkspacesByMemberDao = async ({ authUser, user, cursor, limit }: iWorkspacesMember) => {
     const workspaces = await prisma.workspace.findMany({
         where: {
             AND: [{
@@ -73,7 +73,7 @@ export const getAllWorkspacesByMemberDto = async ({ authUser, user, cursor, limi
     return cursorPagination(workspaces, limit)
 }
 
-export const updateMemberDto = async ({ user, workspace, role }: iUpdateMember) => {
+export const updateMemberDao = async ({ user, workspace, role }: iUpdateMember) => {
     return prisma.membership.update({
         where: {
             user_workspace: {
@@ -87,7 +87,7 @@ export const updateMemberDto = async ({ user, workspace, role }: iUpdateMember) 
     })
 }
 
-export const deleteMemberDto = async ({ user, workspace }: iDeleteMember) => {
+export const deleteMemberDao = async ({ user, workspace }: iDeleteMember) => {
     return prisma.membership.delete({
         where: {
             user_workspace: {

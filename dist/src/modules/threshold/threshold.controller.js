@@ -2,9 +2,9 @@ import { successResponse } from "../../utils/response.js";
 import { createThresholdService, deleteThresholdService, getThresholdsByMetricService, updateThresholdService } from "./threshold.service.js";
 import { workspaceCreator } from "../membership/membership.authorization.js";
 export const createThreshold = async (req, res) => {
-    const { condition, value, notifyUser } = req.body;
     const metric = req.params.metricId;
     const workspace = req.params.workspaceId;
+    const { condition, value, notifyUser } = req.body;
     const authUser = req.user;
     await workspaceCreator({ authUser: authUser.id, workspace });
     await createThresholdService({ metric, condition, workspace, value, notifyUser, createdBy: authUser.id });

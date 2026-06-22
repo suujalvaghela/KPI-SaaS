@@ -1,0 +1,20 @@
+meta {
+  name: order
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/payment/upgrade/2a624885-5e1e-4232-b334-48bead850e46
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

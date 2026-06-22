@@ -2,7 +2,7 @@ import { prisma } from "../../lib/prisma.js"
 import { cursorPagination } from "../../utils/pagination.js"
 import { iCreateNotification, iGetNotification, iUpdateNotification } from "./notification.type.js"
 
-export const createNotificationDto = async ({ user, workspace, message }: iCreateNotification) => {
+export const createNotificationDao = async ({ user, workspace, message }: iCreateNotification) => {
     return prisma.notification.create({
         data: {
             user,
@@ -12,7 +12,7 @@ export const createNotificationDto = async ({ user, workspace, message }: iCreat
     })
 }
 
-export const getNotificationDto = async ({ authUser, cursor, limit }: iGetNotification) => {
+export const getNotificationDao = async ({ authUser, cursor, limit }: iGetNotification) => {
     const notifications = await prisma.notification.findMany({
         where: { user: authUser },
         orderBy: { createdAt: 'desc' },
@@ -27,14 +27,14 @@ export const getNotificationDto = async ({ authUser, cursor, limit }: iGetNotifi
     return cursorPagination(notifications, limit)
 }
 
-export const updateNotificationDto = async ({ authUser, notification, isRead }: iUpdateNotification) => {
+export const updateNotificationDao = async ({ authUser, notification, isRead }: iUpdateNotification) => {
     return prisma.notification.updateMany({
         where: { id: notification, user: authUser },
         data: { isRead }
     })
 }
 
-export const deleteNotificationDto = async (id: string, authUser: string) => {
+export const deleteNotificationDao = async (id: string, authUser: string) => {
     return prisma.notification.deleteMany({
         where: {
             id,

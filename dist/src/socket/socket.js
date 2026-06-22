@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { getMemberByIdsDto } from '../modules/membership/membership.dao.js';
+import { getMemberByIdsDao } from '../modules/membership/membership.dao.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 let io;
@@ -27,7 +27,7 @@ export const initSocet = (server) => {
         console.log(`Authenticated user ${socket.data.user.id} connected`);
         socket.on("join-workspace", async (workspace) => {
             try {
-                const member = await getMemberByIdsDto({ user: socket.data.user.id, workspace });
+                const member = await getMemberByIdsDao({ user: socket.data.user.id, workspace });
                 if (!member) {
                     socket.emit("error", "You are not a part of this workspace!");
                     return;

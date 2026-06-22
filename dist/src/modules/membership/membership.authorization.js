@@ -1,6 +1,6 @@
-import { getMemberByIdsDto } from "./membership.dao.js";
+import { getMemberByIdsDao } from "./membership.dao.js";
 export const workspaceCreator = async ({ authUser, workspace }) => {
-    const member = await getMemberByIdsDto({ user: authUser, workspace });
+    const member = await getMemberByIdsDao({ user: authUser, workspace });
     if (!member) {
         const error = new Error("Route is not allowed!");
         error.statusCode = 403;

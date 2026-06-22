@@ -1,7 +1,7 @@
 import { workspace_role } from "../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 import { cursorPagination } from "../../utils/pagination.js";
-export const createMemberDto = async ({ mUser, workspace, role = workspace_role.Guest }) => {
+export const createMemberDao = async ({ mUser, workspace, role = workspace_role.Guest }) => {
     return prisma.membership.create({
         data: {
             user: mUser,
@@ -10,7 +10,7 @@ export const createMemberDto = async ({ mUser, workspace, role = workspace_role.
         }
     });
 };
-export const getMemberByIdsDto = async ({ user, workspace }) => {
+export const getMemberByIdsDao = async ({ user, workspace }) => {
     return prisma.membership.findUnique({
         where: {
             user_workspace: {
@@ -20,7 +20,7 @@ export const getMemberByIdsDto = async ({ user, workspace }) => {
         },
     });
 };
-export const getAllMembersByWorkspaceDto = async ({ user, workspace, cursor, limit }) => {
+export const getAllMembersByWorkspaceDao = async ({ user, workspace, cursor, limit }) => {
     const members = await prisma.membership.findMany({
         where: {
             workspace
@@ -35,23 +35,23 @@ export const getAllMembersByWorkspaceDto = async ({ user, workspace, cursor, lim
     });
     return cursorPagination(members, limit);
 };
-export const getAllWorkspacesByMemberDto = async ({ authUser, user, cursor, limit }) => {
+export const getAllWorkspacesByMemberDao = async ({ authUser, user, cursor, limit }) => {
     const workspaces = await prisma.workspace.findMany({
         where: {
             AND: [{
-                    memberships: {
-                        some: {
-                            user: authUser
-                        }
+                memberships: {
+                    some: {
+                        user: authUser
                     }
-                },
-                {
-                    memberships: {
-                        some: {
-                            user
-                        }
+                }
+            },
+            {
+                memberships: {
+                    some: {
+                        user
                     }
-                }],
+                }
+            }],
             deletedAt: null
         },
         take: limit + 1,
@@ -64,7 +64,7 @@ export const getAllWorkspacesByMemberDto = async ({ authUser, user, cursor, limi
     });
     return cursorPagination(workspaces, limit);
 };
-export const updateMemberDto = async ({ user, workspace, role }) => {
+export const updateMemberDao = async ({ user, workspace, role }) => {
     return prisma.membership.update({
         where: {
             user_workspace: {
@@ -77,7 +77,7 @@ export const updateMemberDto = async ({ user, workspace, role }) => {
         }
     });
 };
-export const deleteMemberDto = async ({ user, workspace }) => {
+export const deleteMemberDao = async ({ user, workspace }) => {
     return prisma.membership.delete({
         where: {
             user_workspace: {

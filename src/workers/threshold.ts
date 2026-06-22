@@ -1,6 +1,6 @@
 import { Worker } from "bullmq";
 import { getThresholdsByMetricDao2 } from "../modules/threshold/threshold.dao.js";
-import { createNotificationDto } from "../modules/notification/notification.dao.js";
+import { createNotificationDao } from "../modules/notification/notification.dao.js";
 import 'dotenv/config'
 import { redisConnection } from "../config/redis.js";
 import { sendEmail } from "../utils/email.js";
@@ -20,7 +20,7 @@ const thresholdWorker = new Worker(
 
             if (breached) {
                 const message = `Threshold breached for metric ${metric}: value ${value} is ${threshold.condition} ${threshold.value} at ${timestamp}`;
-                await createNotificationDto({ user: threshold.notifyUser, workspace: threshold.workspace, message })
+                await createNotificationDao({ user: threshold.notifyUser, workspace: threshold.workspace, message })
                 await sendEmail({
                     to: threshold.notifyUser,
                     subject: "Threshold Alert",

@@ -1,19 +1,19 @@
 import { prisma } from "../../lib/prisma.js"
 import { iCreatePaymentEvent, iCreateSubscription, iUpdatePayment } from "./payment.type.js"
 
-export const createSubscriptionDto = async ({ workspace, razorpayOrder, amount }: iCreateSubscription) => {
+export const createSubscriptionDao = async ({ workspace, razorpayOrder, amount }: iCreateSubscription) => {
     return await prisma.subscription.create({
         data: {
             workspace,
             razorpayOrder,
             amount,
             currency: 'INR',
-            status: 'pending'
+            status: 'PENDING'
         }
     })
 }
 
-export const getSubscriptionByWorkspaceDto = async (workspace: string) => {
+export const getSubscriptionByWorkspaceDao = async (workspace: string) => {
     return prisma.subscription.findFirst({
         where: {
             workspace
@@ -21,7 +21,7 @@ export const getSubscriptionByWorkspaceDto = async (workspace: string) => {
     })
 }
 
-export const getSubscriptionByRazorpayDto = async (razorpayOrder: string) => {
+export const getSubscriptionByRazorpayDao = async (razorpayOrder: string) => {
     return prisma.subscription.findFirst({
         where: {
             razorpayOrder
@@ -29,7 +29,7 @@ export const getSubscriptionByRazorpayDto = async (razorpayOrder: string) => {
     })
 }
 
-export const updateSubscriptionDto = async ({ subscription, razorpayPayment, status, nextBillingDate }: iUpdatePayment) => {
+export const updateSubscriptionDao = async ({ subscription, razorpayPayment, status, nextBillingDate }: iUpdatePayment) => {
     return await prisma.subscription.update({
         where: { id: subscription },
         data: {
@@ -40,7 +40,7 @@ export const updateSubscriptionDto = async ({ subscription, razorpayPayment, sta
     })
 }
 
-export const createPaymentEventDto = async ({ subscription, eventType, razorpayEvent, details }: iCreatePaymentEvent) => {
+export const createPaymentEventDao = async ({ subscription, eventType, razorpayEvent, details }: iCreatePaymentEvent) => {
     return prisma.paymentEvent.create({
         data: {
             subscription,

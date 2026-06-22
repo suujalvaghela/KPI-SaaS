@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
-import { deleteUserDto } from "./user.dao.js";
+import { deleteUserDao } from "./user.dao.js";
 export const deleteUserService = async ({ authUser, id }) => {
     const adminRole = await prisma.role.findUnique({
         where: {
@@ -11,5 +11,5 @@ export const deleteUserService = async ({ authUser, id }) => {
         error.statusCode = 403;
         throw error;
     }
-    await deleteUserDto(id);
+    await deleteUserDao(id);
 };

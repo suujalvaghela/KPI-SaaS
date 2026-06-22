@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma.js"
-import { GoogleUser } from "./auth.type.js"
+import { iGoogleUser } from "./auth.type.js"
 
-export const GoogleUserDto = async (data: GoogleUser) => {
+export const googleUserDao = async (data: iGoogleUser) => {
     let user = await prisma.user.findFirst({
         where: {
             OR: [{ email: data.email }, { googleId: data.googleId }]

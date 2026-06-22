@@ -5,14 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/user/?limit=2&cursor={{nextCursor}}
+  url: {{baseUrl}}/user/?limit=2
   body: none
   auth: bearer
 }
 
 params:query {
   limit: 2
-  cursor: {{nextCursor}}
+  ~cursor: {{nextCursor}}
 }
 
 auth:bearer {

@@ -1,6 +1,6 @@
 import { Server } from 'socket.io'
 import { Server as HTTPServer } from 'http'
-import { getMemberByIdsDto } from '../modules/membership/membership.dao.js';
+import { getMemberByIdsDao } from '../modules/membership/membership.dao.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 
@@ -32,7 +32,7 @@ export const initSocet = (server: HTTPServer) => {
 
         socket.on("join-workspace", async (workspace: string) => {
             try {
-                const member = await getMemberByIdsDto({ user: socket.data.user.id, workspace })
+                const member = await getMemberByIdsDao({ user: socket.data.user.id, workspace })
                 if (!member) {
                     socket.emit("error", "You are not a part of this workspace!")
                     return

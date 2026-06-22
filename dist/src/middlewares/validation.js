@@ -1,8 +1,14 @@
 import { ZodError } from "zod";
-export const validate = (schema) => {
+export const validate = (schema, source = 'body') => {
     return (req, res, next) => {
         try {
-            req.body = schema.parse(req.body || {});
+            const parsed = schema.parse(req[source] || {});
+            if (source === 'query' || source === 'params') {
+                Object.assign(req[source], parsed);
+            }
+            else {
+                req.body = parsed;
+            }
             next();
         }
         catch (error) {

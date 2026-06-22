@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { successResponse } from "../../utils/response.js";
 import { createMemberService, getAllMembersByWorkspaceService, updateMemberService, } from "./membership.service.js";
-import { deleteMemberDto, getAllWorkspacesByMemberDto } from "./membership.dao.js";
+import { deleteMemberDao, getAllWorkspacesByMemberDao } from "./membership.dao.js";
 import { workspaceCreator } from "./membership.authorization.js";
 
 export const createMember = async (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ export const getAllWorkspacesByMember = async (req: Request, res: Response) => {
     const user = req.params.userId as string;
     const cursor = req.query.cursor as string | undefined
     const limit = req.query.limit ? Number(req.query.limit) : 5
-    const workspaces = await getAllWorkspacesByMemberDto({ authUser: authUser.id, user, cursor, limit })
+    const workspaces = await getAllWorkspacesByMemberDao({ authUser: authUser.id, user, cursor, limit })
     return successResponse(res, 200, "workspaces fetched successfully!", workspaces)
 }
 
@@ -55,11 +55,11 @@ export const deleteMember = async (req: Request, res: Response) => {
     const authUser = req.user!
 
     if (authUser.id === user) {
-        await deleteMemberDto({ user, workspace })
+        await deleteMemberDao({ user, workspace })
         return successResponse(res, 200, 'member deleted Successfully!')
     }
 
     await workspaceCreator({ authUser: authUser.id, workspace })
-    await deleteMemberDto({ user, workspace })
+    await deleteMemberDao({ user, workspace })
     return successResponse(res, 200, 'member deleted Successfully!')
 }

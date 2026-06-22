@@ -1,11 +1,11 @@
 import { AppError } from "../../utils/response.js"
-import { getMemberByIdsDto } from "../membership/membership.dao.js"
-import { getMetricByIdDto } from "../metric/metric.dao.js"
-import { createDatapointDao, deleteDatapointDto, getDatapointByIdDao, getDatapointsByMetricDao } from "./datapoint.dao.js"
+import { getMemberByIdsDao } from "../membership/membership.dao.js"
+import { getMetricByIdDao } from "../metric/metric.dao.js"
+import { createDatapointDao, deleteDatapointDao, getDatapointByIdDao, getDatapointsByMetricDao } from "./datapoint.dao.js"
 import { iCreateDatapoint, iDeleteDatapoint, iGetDatapoints } from "./datapoint.type.js"
 
 export const createDatapointService = async ({ authUser, metric, value, timestamp, workspace }: iCreateDatapoint) => {
-    const metric_data = await getMetricByIdDto(metric)
+    const metric_data = await getMetricByIdDao(metric)
 
     if (!metric_data) {
         const error = new Error('Metric not found') as AppError;
@@ -19,7 +19,7 @@ export const createDatapointService = async ({ authUser, metric, value, timestam
         throw error;
     }
 
-    const member = await getMemberByIdsDto({ user: authUser, workspace: metric_data.workspace })
+    const member = await getMemberByIdsDao({ user: authUser, workspace: metric_data.workspace })
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError;
         error.statusCode = 400;
@@ -27,11 +27,11 @@ export const createDatapointService = async ({ authUser, metric, value, timestam
     }
 
     timestamp = new Date(timestamp);
-    return await createDatapointDao({ authUser, metric, value, timestamp,workspace })
+    return await createDatapointDao({ authUser, metric, value, timestamp, workspace })
 }
 
 export const getDatapointsByMetricService = async ({ metric, user, cursor, limit }: iGetDatapoints) => {
-    const metric_data = await getMetricByIdDto(metric)
+    const metric_data = await getMetricByIdDao(metric)
 
     if (!metric_data) {
         const error = new Error('Metric not found') as AppError;
@@ -39,7 +39,7 @@ export const getDatapointsByMetricService = async ({ metric, user, cursor, limit
         throw error;
     }
 
-    const member = await getMemberByIdsDto({ user, workspace: metric_data.workspace })
+    const member = await getMemberByIdsDao({ user, workspace: metric_data.workspace })
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError;
         error.statusCode = 400;
@@ -57,7 +57,7 @@ export const deleteDatapointService = async ({ authUser, datapoint, workspace }:
         throw error;
     }
 
-    const metric_data = await getMetricByIdDto(datapoint_data.metric)
+    const metric_data = await getMetricByIdDao(datapoint_data.metric)
     if (!metric_data) {
         const error = new Error('Metric not found') as AppError;
         error.statusCode = 404;
@@ -70,12 +70,12 @@ export const deleteDatapointService = async ({ authUser, datapoint, workspace }:
         throw error;
     }
 
-    const member = await getMemberByIdsDto({ user: authUser, workspace: metric_data.workspace })
+    const member = await getMemberByIdsDao({ user: authUser, workspace: metric_data.workspace })
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError;
         error.statusCode = 400;
         throw error;
     }
 
-    return await deleteDatapointDto(datapoint)
+    return await deleteDatapointDao(datapoint)
 }

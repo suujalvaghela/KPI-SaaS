@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma.js";
 import { cursorPagination } from "../../utils/pagination.js";
-export const updateUserDto = ({ id, name }) => {
+export const updateUserDao = ({ id, name }) => {
     return prisma.user.update({
         where: {
             id,
@@ -9,7 +9,7 @@ export const updateUserDto = ({ id, name }) => {
         data: { name }
     });
 };
-export const getUserByIdDto = (id) => {
+export const getUserByIdDao = (id) => {
     return prisma.user.findFirst({
         where: {
             id,
@@ -17,7 +17,7 @@ export const getUserByIdDto = (id) => {
         }
     });
 };
-export const getUserByEmailDto = (email) => {
+export const getUserByEmailDao = (email) => {
     return prisma.user.findFirst({
         where: {
             email,
@@ -25,7 +25,7 @@ export const getUserByEmailDto = (email) => {
         }
     });
 };
-export const getAllUsersDto = async ({ cursor, limit }) => {
+export const getAllUsersDao = async ({ cursor, limit }) => {
     const users = await prisma.user.findMany({
         where: {
             deletedAt: null
@@ -40,7 +40,7 @@ export const getAllUsersDto = async ({ cursor, limit }) => {
     });
     return cursorPagination(users, limit);
 };
-export const deleteUserDto = (id) => {
+export const deleteUserDao = (id) => {
     return prisma.user.update({
         where: { id },
         data: {

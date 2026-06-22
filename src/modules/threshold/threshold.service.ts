@@ -1,14 +1,14 @@
 import { AppError } from "../../utils/response.js"
-import { getMemberByIdsDto } from "../membership/membership.dao.js"
-import { getMetricByIdDto } from "../metric/metric.dao.js"
-import { createThresholdDao, getThresholdsByMetricDao, getThresholdByIdDao, updateThresholdDto, deleteThresholdDto } from "./threshold.dao.js"
+import { getMemberByIdsDao } from "../membership/membership.dao.js"
+import { getMetricByIdDao } from "../metric/metric.dao.js"
+import { createThresholdDao, getThresholdsByMetricDao, getThresholdByIdDao, updateThresholdDao, deleteThresholdDao } from "./threshold.dao.js"
 import { iCreateThreshold, iDeleteThreshold, iGetThresholds, iUpdateThreshold } from "./threshold.type.js"
-import { getUserByEmailDto } from "../user/user.dao.js"
-import { getWorkspaceByidDto } from "../workspace/workspace.dao.js"
+import { getUserByEmailDao } from "../user/user.dao.js"
+import { getWorkspaceByidDao } from "../workspace/workspace.dao.js"
 import { workspaceCreator } from "../membership/membership.authorization.js"
 
 export const createThresholdService = async ({ metric, condition, workspace, value, notifyUser, createdBy }: iCreateThreshold) => {
-    const metric_data = await getMetricByIdDto(metric)
+    const metric_data = await getMetricByIdDao(metric)
     if (!metric_data) {
         const error = new Error('Metric not found') as AppError;
         error.statusCode = 404;
@@ -21,14 +21,14 @@ export const createThresholdService = async ({ metric, condition, workspace, val
         throw error;
     }
 
-    const user = await getUserByEmailDto(notifyUser)
+    const user = await getUserByEmailDao(notifyUser)
     if (!user) {
         const error = new Error('Notify user not found') as AppError;
         error.statusCode = 400;
         throw error;
     }
 
-    const workspace_data = await getWorkspaceByidDto(workspace)
+    const workspace_data = await getWorkspaceByidDao(workspace)
     if (!workspace_data) {
         const error = new Error('workspace not found') as AppError;
         error.statusCode = 400;
@@ -39,14 +39,14 @@ export const createThresholdService = async ({ metric, condition, workspace, val
 }
 
 export const getThresholdsByMetricService = async ({ metric, user, cursor, limit }: iGetThresholds) => {
-    const metric_data = await getMetricByIdDto(metric)
+    const metric_data = await getMetricByIdDao(metric)
     if (!metric_data) {
         const error = new Error('Metric not found') as AppError;
         error.statusCode = 404;
         throw error;
     }
 
-    const member = await getMemberByIdsDto({ user, workspace: metric_data.workspace })
+    const member = await getMemberByIdsDao({ user, workspace: metric_data.workspace })
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError;
         error.statusCode = 400;
@@ -68,7 +68,7 @@ export const updateThresholdService = async ({ authUser, threshold, workspace, c
     await workspaceCreator({ authUser, workspace })
 
     if (notifyUser) {
-        const user = await getUserByEmailDto(notifyUser)
+        const user = await getUserByEmailDao(notifyUser)
         if (!user) {
             const error = new Error('Notify user not found') as AppError;
             error.statusCode = 400;
@@ -76,7 +76,7 @@ export const updateThresholdService = async ({ authUser, threshold, workspace, c
         }
     }
 
-    await updateThresholdDto({ authUser, threshold, workspace, condition, value, notifyUser })
+    await updateThresholdDao({ authUser, threshold, workspace, condition, value, notifyUser })
 }
 
 export const deleteThresholdService = async ({ authUser, threshold, workspace }: iDeleteThreshold) => {
@@ -89,6 +89,6 @@ export const deleteThresholdService = async ({ authUser, threshold, workspace }:
     }
 
     await workspaceCreator({ authUser: authUser, workspace })
-    await deleteThresholdDto(threshold)
+    await deleteThresholdDao(threshold)
 }
 
