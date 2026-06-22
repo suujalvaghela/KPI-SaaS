@@ -1,14 +1,14 @@
-import { createWorkspaceDto, deleteWorkspaceDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js";
-import { getUserByIdDto } from "../user/user.dao.js";
-import { getMemberByIdsDto } from "../membership/membership.dao.js";
+import { createWorkspaceDao, deleteWorkspaceDao, getWorkspaceByidDao, updateWorkspaceDao } from "./workspace.dao.js";
+import { getUserByIdDao } from "../user/user.dao.js";
+import { getMemberByIdsDao } from "../membership/membership.dao.js";
 export const createWorkspaceService = async ({ name, author }) => {
-    const user = await getUserByIdDto(author);
+    const user = await getUserByIdDao(author);
     if (!user) {
         const error = new Error('Author not found');
         error.statusCode = 404;
         throw error;
     }
-    const workspace = await createWorkspaceDto({ name, author });
+    const workspace = await createWorkspaceDao({ name, author });
     if (!workspace) {
         const error = new Error('Failed to create workspace');
         error.statusCode = 500;
@@ -17,25 +17,25 @@ export const createWorkspaceService = async ({ name, author }) => {
     return workspace;
 };
 export const getWorkspaceByIdService = async ({ user, workspace }) => {
-    const member = await getMemberByIdsDto({ user, workspace });
+    const member = await getMemberByIdsDao({ user, workspace });
     if (!member) {
         const error = new Error('You are not a part of this workspace!');
         error.statusCode = 404;
         throw error;
     }
-    return await getWorkspaceByidDto(workspace);
+    return await getWorkspaceByidDao(workspace);
 };
 export const updateWorkspaceService = async ({ workspace, name }) => {
-    const workspace_data = await getWorkspaceByidDto(workspace);
+    const workspace_data = await getWorkspaceByidDao(workspace);
     if (!workspace_data) {
         const error = new Error('workspace does not existing');
         error.statusCode = 403;
         throw error;
     }
-    await updateWorkspaceDto({ workspace, name });
+    await updateWorkspaceDao({ workspace, name });
 };
 export const deleteWorkspaceService = async (authUser, id) => {
-    const workspace = await getWorkspaceByidDto(id);
+    const workspace = await getWorkspaceByidDao(id);
     if (!workspace) {
         const error = new Error('workspace does not existing');
         error.statusCode = 403;
@@ -46,5 +46,5 @@ export const deleteWorkspaceService = async (authUser, id) => {
         error.statusCode = 403;
         throw error;
     }
-    await deleteWorkspaceDto(id);
+    await deleteWorkspaceDao(id);
 };

@@ -1,12 +1,12 @@
-import { getWorkspaceByidDto } from "../workspace/workspace.dao.js";
+import { getWorkspaceByidDao } from "../workspace/workspace.dao.js";
 import { iCreateMember, iGetAllMember, iUpdateMember } from "./membership.type.js";
 import { AppError } from "../../utils/response.js";
-import { getUserByIdDto } from "../user/user.dao.js";
-import { createMemberDto, getMemberByIdsDto, getAllMembersByWorkspaceDto, getAllWorkspacesByMemberDto, updateMemberDto } from "./membership.dao.js";
+import { getUserByIdDao } from "../user/user.dao.js";
+import { createMemberDao, getMemberByIdsDao, getAllMembersByWorkspaceDao, updateMemberDao } from "./membership.dao.js";
 
 export const createMemberService = async ({ mUser, workspace, role }: iCreateMember) => {
-    const memberWorkspace = await getWorkspaceByidDto(workspace)
-    const memberUser = await getUserByIdDto(mUser)
+    const memberWorkspace = await getWorkspaceByidDao(workspace)
+    const memberUser = await getUserByIdDao(mUser)
 
     if (!memberUser) {
         const error = new Error('User not found') as AppError;
@@ -20,11 +20,11 @@ export const createMemberService = async ({ mUser, workspace, role }: iCreateMem
         throw error;
     }
 
-    await createMemberDto({ mUser, workspace, role })
+    await createMemberDao({ mUser, workspace, role })
 }
 
 export const getAllMembersByWorkspaceService = async ({ user, workspace, cursor, limit }: iGetAllMember) => {
-    const member = await getMemberByIdsDto({ user, workspace })
+    const member = await getMemberByIdsDao({ user, workspace })
 
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError
@@ -32,11 +32,11 @@ export const getAllMembersByWorkspaceService = async ({ user, workspace, cursor,
         throw error
     }
 
-    return await getAllMembersByWorkspaceDto({ user, workspace, cursor, limit });
+    return await getAllMembersByWorkspaceDao({ user, workspace, cursor, limit });
 }
 
 export const updateMemberService = async ({ user, workspace, role }: iUpdateMember) => {
-    const workspace_data = await getWorkspaceByidDto(workspace)
+    const workspace_data = await getWorkspaceByidDao(workspace)
 
     if (!workspace_data) {
         const error = new Error('Workspace Does not exist!') as AppError
@@ -50,5 +50,5 @@ export const updateMemberService = async ({ user, workspace, role }: iUpdateMemb
         throw error
     }
 
-    await updateMemberDto({ user, workspace, role })
+    await updateMemberDao({ user, workspace, role })
 }

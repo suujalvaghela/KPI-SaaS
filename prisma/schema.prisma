@@ -7,33 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum workspace_role {
-  Creator
-  Guest
-}
-
-enum workspace_plan {
-  free
-  pro
-}
-
-enum payment_event {
-  order_created
-  payment_success
-  payment_failed
-}
-
-enum threshold_condition {
-  ABOVE
-  BELOW
-}
-
-enum subscription_status {
-  pending
-  failed
-  paid
-}
-
 model Role {
   id        String   @id @default(uuid())
   name      String   @unique
@@ -83,7 +56,7 @@ model Workspace {
   name          String
   user          User           @relation(fields: [author], references: [id])
   author        String
-  plan          workspace_plan @default(free)
+  plan          workspace_plan @default(FREE)
   memberships   Membership[]
   metrics       Metric[]
   createdAt     DateTime       @default(now()) @map("created_at")
@@ -103,7 +76,7 @@ model Membership {
   user       String
   workspaces Workspace      @relation(fields: [workspace], references: [id])
   workspace  String
-  role       workspace_role @default(Guest)
+  role       workspace_role @default(GUEST)
   createdAt  DateTime       @default(now()) @map("created_at")
   updatedAt  DateTime       @updatedAt @map("updated_at")
 
@@ -182,9 +155,9 @@ model Subscription {
   razorpayPayment String?             @unique @map("razorpay_payment")
   amount          Int
   currency        String              @default("INR")
-  status          subscription_status @default(pending)
+  status          subscription_status @default(PENDING)
   nextBillingDate DateTime?           @map("next_billing_date")
-  paymentEvents   paymentEvent[]
+  paymentEvents   PaymentEvent[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -192,7 +165,7 @@ model Subscription {
   @@map("subscriptions")
 }
 
-model paymentEvent {
+model PaymentEvent {
   id            String        @id @default(uuid())
   subscriptions Subscription  @relation(fields: [subscription], references: [id])
   subscription  String
@@ -202,4 +175,31 @@ model paymentEvent {
   createdAt     DateTime      @default(now()) @map("created_at")
 
   @@map("payment_events")
+}
+
+enum workspace_role {
+  CREATOR
+  GUEST
+}
+
+enum workspace_plan {
+  FREE
+  PRO
+}
+
+enum payment_event {
+  ORDER_CREATED
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+}
+
+enum threshold_condition {
+  ABOVE
+  BELOW
+}
+
+enum subscription_status {
+  PENDING
+  FAILED
+  PAID
 }

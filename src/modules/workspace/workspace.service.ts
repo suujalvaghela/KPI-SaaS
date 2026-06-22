@@ -1,14 +1,14 @@
 import { iUpdateWorkspace, iWorkspace } from "./workspace.type.js"
-import { createWorkspaceDto, deleteWorkspaceDto, getWorkspaceByidDto, updateWorkspaceDto } from "./workspace.dao.js"
+import { createWorkspaceDao, deleteWorkspaceDao, getWorkspaceByidDao, updateWorkspaceDao } from "./workspace.dao.js"
 import { AppError } from "../../utils/response.js";
-import { getUserByIdDto } from "../user/user.dao.js";
+import { getUserByIdDao } from "../user/user.dao.js";
 import { AuthenticatedUser } from "../../utils/authUser.js";
 import { iGetMember } from "../membership/membership.type.js";
-import { getMemberByIdsDto } from "../membership/membership.dao.js";
+import { getMemberByIdsDao } from "../membership/membership.dao.js";
 
 export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
 
-    const user = await getUserByIdDto(author)
+    const user = await getUserByIdDao(author)
 
     if (!user) {
         const error = new Error('Author not found') as AppError;
@@ -16,7 +16,7 @@ export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
         throw error;
     }
 
-    const workspace = await createWorkspaceDto({ name, author });
+    const workspace = await createWorkspaceDao({ name, author });
 
     if (!workspace) {
         const error = new Error('Failed to create workspace') as AppError;
@@ -28,7 +28,7 @@ export const createWorkspaceService = async ({ name, author }: iWorkspace) => {
 }
 
 export const getWorkspaceByIdService = async ({ user, workspace }: iGetMember) => {
-    const member = await getMemberByIdsDto({ user, workspace })
+    const member = await getMemberByIdsDao({ user, workspace })
 
     if (!member) {
         const error = new Error('You are not a part of this workspace!') as AppError
@@ -36,11 +36,11 @@ export const getWorkspaceByIdService = async ({ user, workspace }: iGetMember) =
         throw error
     }
 
-    return await getWorkspaceByidDto(workspace);
+    return await getWorkspaceByidDao(workspace);
 }
 
 export const updateWorkspaceService = async ({ workspace, name }: iUpdateWorkspace) => {
-    const workspace_data = await getWorkspaceByidDto(workspace)
+    const workspace_data = await getWorkspaceByidDao(workspace)
 
     if (!workspace_data) {
         const error = new Error('workspace does not existing') as AppError;
@@ -48,14 +48,14 @@ export const updateWorkspaceService = async ({ workspace, name }: iUpdateWorkspa
         throw error;
     }
 
-    await updateWorkspaceDto({ workspace, name })
+    await updateWorkspaceDao({ workspace, name })
 }
 
 export const deleteWorkspaceService = async (
     authUser: AuthenticatedUser,
     id: string
 ) => {
-    const workspace = await getWorkspaceByidDto(id)
+    const workspace = await getWorkspaceByidDao(id)
 
     if (!workspace) {
         const error = new Error('workspace does not existing') as AppError;
@@ -69,5 +69,5 @@ export const deleteWorkspaceService = async (
         throw error;
     }
 
-    await deleteWorkspaceDto(id);
+    await deleteWorkspaceDao(id);
 }

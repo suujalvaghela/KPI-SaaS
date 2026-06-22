@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import { authRoute } from './modules/auth/auth.route.js'
 import { userRoute } from './modules/user/user.route.js'
 import { policyRoute } from './modules/policy/policy.route.js'
@@ -15,6 +16,10 @@ import { errorResponse } from "./utils/response.js";
 
 const app = express();
 
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

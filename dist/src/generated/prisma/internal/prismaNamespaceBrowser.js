@@ -47,7 +47,9 @@ export const ModelName = {
     Metric: 'Metric',
     Datapoint: 'Datapoint',
     Threshold: 'Threshold',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    Subscription: 'Subscription',
+    PaymentEvent: 'PaymentEvent'
 };
 /*
  * Enums
@@ -85,6 +87,7 @@ export const WorkspaceScalarFieldEnum = {
     id: 'id',
     name: 'name',
     author: 'author',
+    plan: 'plan',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
@@ -136,9 +139,32 @@ export const NotificationScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+export const SubscriptionScalarFieldEnum = {
+    id: 'id',
+    workspace: 'workspace',
+    razorpayOrder: 'razorpayOrder',
+    razorpayPayment: 'razorpayPayment',
+    amount: 'amount',
+    currency: 'currency',
+    status: 'status',
+    nextBillingDate: 'nextBillingDate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const PaymentEventScalarFieldEnum = {
+    id: 'id',
+    subscription: 'subscription',
+    eventType: 'eventType',
+    razorpayEvent: 'razorpayEvent',
+    details: 'details',
+    createdAt: 'createdAt'
+};
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
+};
+export const JsonNullValueInput = {
+    JsonNull: JsonNull
 };
 export const QueryMode = {
     default: 'default',
@@ -147,4 +173,9 @@ export const QueryMode = {
 export const NullsOrder = {
     first: 'first',
     last: 'last'
+};
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull
 };

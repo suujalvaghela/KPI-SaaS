@@ -43,7 +43,7 @@ export const getDatapointByIdDao = async (id) => {
         where: { id }
     });
 };
-export const deleteDatapointDto = async (id) => {
+export const deleteDatapointDao = async (id) => {
     return await prisma.datapoint.delete({
         where: { id }
     });

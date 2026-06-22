@@ -6,6 +6,11 @@ export interface iCreateSubscription {
     amount: number
 }
 
+export interface iCreateSubscriptionController {
+    authUser: string,
+    workspace: string
+}
+
 export interface iCreatePaymentEvent {
     subscription: string,
     eventType: payment_event,

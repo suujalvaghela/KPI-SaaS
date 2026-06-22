@@ -1,11 +1,11 @@
 import { successResponse } from "../../utils/response.js";
-import { getAllUsersDto, getUserByIdDto, updateUserDto } from "./user.dao.js";
+import { getAllUsersDao, getUserByIdDao, updateUserDao } from "./user.dao.js";
 import { clearRefreshTokenCookie } from "../../utils/tokens.js";
 import { deleteUserService } from "./user.service.js";
 export const getAllUsers = async (req, res) => {
     const limit = req.query.limit ? Number(req.query.limit) : 5;
     const cursor = req.query.cursor;
-    const users = await getAllUsersDto({ limit, cursor });
+    const users = await getAllUsersDao({ limit, cursor });
     return successResponse(res, 200, 'Users retrieved successfully', users);
 };
 export const updateUser = async (req, res) => {
@@ -17,8 +17,8 @@ export const updateUser = async (req, res) => {
         error.statusCode = 403;
         throw error;
     }
-    const user = await updateUserDto({ id, name });
-    return successResponse(res, 200, 'User updated successfully', user);
+    await updateUserDao({ id, name });
+    return successResponse(res, 200, 'User updated successfully');
 };
 export const getUserById = async (req, res) => {
     const { params: { id } } = req;
@@ -27,7 +27,7 @@ export const getUserById = async (req, res) => {
         error.statusCode = 400;
         throw error;
     }
-    const user = await getUserByIdDto(id);
+    const user = await getUserByIdDao(id);
     if (!user) {
         const error = new Error('User not found');
         error.statusCode = 404;

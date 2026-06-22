@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { GoogleUserDto } from './auth.dao.js';
+import { googleUserDao } from './auth.dao.js';
 import { OAuth2Client } from 'google-auth-library';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken, verifyAccessToken } from '../../utils/tokens.js';
-import { getUserByIdDto } from '../user/user.dao.js';
+import { getUserByIdDao } from '../user/user.dao.js';
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const authenticateGoogleUser = async (idToken) => {
     const ticket = await googleClient.verifyIdToken({
@@ -15,7 +15,7 @@ export const authenticateGoogleUser = async (idToken) => {
         error.statusCode = 400;
         throw error;
     }
-    const user = await GoogleUserDto({
+    const user = await googleUserDao({
         googleId: payload.sub,
         email: payload.email,
         name: payload.name || "",
@@ -28,7 +28,7 @@ export const authenticateGoogleUser = async (idToken) => {
 };
 export const refreshSessionTokens = async (refreshToken) => {
     const payload = verifyRefreshToken(refreshToken);
-    const user = await getUserByIdDto(payload.id);
+    const user = await getUserByIdDao(payload.id);
     if (!user) {
         const error = new Error('User not found');
         error.statusCode = 404;
@@ -46,6 +46,6 @@ export const getUserProfile = async (token) => {
         error.statusCode = 401;
         throw error;
     }
-    const me = await getUserByIdDto(payload.id);
+    const me = await getUserByIdDao(payload.id);
     return me;
 };

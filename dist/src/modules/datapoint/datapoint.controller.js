@@ -8,7 +8,7 @@ export const createDatapoint = async (req, res) => {
     const metric = req.params.metricId;
     const workspace = req.params.workspaceId;
     const authUser = req.user;
-    await createDatapointService({ authUser: authUser.id, metric, value, timestamp });
+    await createDatapointService({ authUser: authUser.id, metric, value, timestamp, workspace });
     getIO()
         .to(`workspace_${workspace}`)
         .emit("datapoint:new", { metric, value, timestamp });
