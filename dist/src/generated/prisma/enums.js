@@ -8,24 +8,24 @@
 * 🟢 You can import this file directly.
 */
 export const workspace_role = {
-    Creator: 'Creator',
-    Guest: 'Guest'
+    CREATOR: 'CREATOR',
+    GUEST: 'GUEST'
 };
 export const workspace_plan = {
-    free: 'free',
-    pro: 'pro'
+    FREE: 'FREE',
+    PRO: 'PRO'
 };
 export const payment_event = {
-    order_created: 'order_created',
-    payment_success: 'payment_success',
-    payment_failed: 'payment_failed'
+    ORDER_CREATED: 'ORDER_CREATED',
+    PAYMENT_SUCCESS: 'PAYMENT_SUCCESS',
+    PAYMENT_FAILED: 'PAYMENT_FAILED'
 };
 export const threshold_condition = {
     ABOVE: 'ABOVE',
     BELOW: 'BELOW'
 };
 export const subscription_status = {
-    pending: 'pending',
-    failed: 'failed',
-    paid: 'paid'
+    PENDING: 'PENDING',
+    FAILED: 'FAILED',
+    PAID: 'PAID'
 };

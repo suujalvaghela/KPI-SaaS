@@ -1,7 +1,7 @@
 import { workspace_role } from "../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 import { cursorPagination } from "../../utils/pagination.js";
-export const createMemberDao = async ({ mUser, workspace, role = workspace_role.Guest }) => {
+export const createMemberDao = async ({ mUser, workspace, role = workspace_role.GUEST }) => {
     return prisma.membership.create({
         data: {
             user: mUser,
@@ -39,19 +39,19 @@ export const getAllWorkspacesByMemberDao = async ({ authUser, user, cursor, limi
     const workspaces = await prisma.workspace.findMany({
         where: {
             AND: [{
-                memberships: {
-                    some: {
-                        user: authUser
+                    memberships: {
+                        some: {
+                            user: authUser
+                        }
                     }
-                }
-            },
-            {
-                memberships: {
-                    some: {
-                        user
+                },
+                {
+                    memberships: {
+                        some: {
+                            user
+                        }
                     }
-                }
-            }],
+                }],
             deletedAt: null
         },
         take: limit + 1,

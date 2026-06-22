@@ -1,12 +1,12 @@
 import 'dotenv/config';
-import { GoogleUserDao } from './auth.dao.js';
+import { googleUserDao } from './auth.dao.js';
 import { OAuth2Client } from 'google-auth-library';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken, verifyAccessToken } from '../../utils/tokens.js';
 import { getUserByIdDao } from '../user/user.dao.js';
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-export const authenticateGoogleUser = async (iDaoken) => {
-    const ticket = await googleClient.verifyIDaoken({
-        iDaoken,
+export const authenticateGoogleUser = async (idToken) => {
+    const ticket = await googleClient.verifyIdToken({
+        idToken,
         audience: process.env.GOOGLE_CLIENT_ID
     });
     const payload = ticket.getPayload();
@@ -15,7 +15,7 @@ export const authenticateGoogleUser = async (iDaoken) => {
         error.statusCode = 400;
         throw error;
     }
-    const user = await GoogleUserDao({
+    const user = await googleUserDao({
         googleId: payload.sub,
         email: payload.email,
         name: payload.name || "",

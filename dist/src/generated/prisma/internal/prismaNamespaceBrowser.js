@@ -49,7 +49,7 @@ export const ModelName = {
     Threshold: 'Threshold',
     Notification: 'Notification',
     Subscription: 'Subscription',
-    paymentEvent: 'paymentEvent'
+    PaymentEvent: 'PaymentEvent'
 };
 /*
  * Enums

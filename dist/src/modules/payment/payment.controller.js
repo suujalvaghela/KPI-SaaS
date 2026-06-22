@@ -5,7 +5,7 @@ export const initiateUpgrade = async (req, res) => {
     const workspace = req.params.workspaceId;
     const { id: authUser } = req.user;
     await workspaceCreator({ authUser, workspace });
-    const paymentOrder = await createSubscriptionService(authUser, workspace);
+    const paymentOrder = await createSubscriptionService({ authUser, workspace });
     return successResponse(res, 201, "Payment order created", paymentOrder);
 };
 export const verifyPayment = async (req, res) => {

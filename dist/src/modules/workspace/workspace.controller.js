@@ -9,7 +9,7 @@ export const createWorkspace = async (req, res) => {
     const { body: { name } } = req;
     const authUser = req.user;
     const workspace = await createWorkspaceService({ name, author: authUser.id });
-    await createMemberDao({ mUser: workspace.author, workspace: workspace.id, role: workspace_role.Creator });
+    await createMemberDao({ mUser: workspace.author, workspace: workspace.id, role: workspace_role.CREATOR });
     return successResponse(res, 201, 'Workspace created successfully');
 };
 export const getMyWorkspaces = async (req, res) => {

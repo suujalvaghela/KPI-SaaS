@@ -3,8 +3,8 @@ import { authenticateGoogleUser, getUserProfile, refreshSessionTokens } from "./
 import 'dotenv/config';
 import { refreshTokenCookies, clearRefreshTokenCookie } from "../../utils/tokens.js";
 export const handleGoogleAuth = async (req, res) => {
-    const { iDaoken } = req.body;
-    const { refreshToken, accessToken } = await authenticateGoogleUser(iDaoken);
+    const { idToken } = req.body;
+    const { refreshToken, accessToken } = await authenticateGoogleUser(idToken);
     await refreshTokenCookies(res, refreshToken);
     return successResponse(res, 200, 'Authentication successful', { accessToken });
 };

@@ -6,7 +6,7 @@ export const createSubscriptionDao = async ({ workspace, razorpayOrder, amount }
             razorpayOrder,
             amount,
             currency: 'INR',
-            status: 'pending'
+            status: 'PENDING'
         }
     });
 };

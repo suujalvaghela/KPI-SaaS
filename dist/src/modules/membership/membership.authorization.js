@@ -6,7 +6,7 @@ export const workspaceCreator = async ({ authUser, workspace }) => {
         error.statusCode = 403;
         throw error;
     }
-    else if (member.role !== "Creator") {
+    else if (member.role !== "CREATOR") {
         const error = new Error(`Route is not allowed for ${member.role}`);
         error.statusCode = 403;
         throw error;
