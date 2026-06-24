@@ -2,13 +2,16 @@ import { prisma } from "../../lib/prisma.js"
 import { cursorPagination } from "../../utils/pagination.js"
 import { iGetAllUsers, iUpdateUser } from "./user.type.js"
 
-export const updateUserDao = ({ id, name }: iUpdateUser) => {
+export const updateUserDao = ({ id, name, role }: iUpdateUser) => {
     return prisma.user.update({
         where: {
             id,
             deletedAt: null
         },
-        data: { name }
+        data: {
+            ...(name && { name }),
+            ...(role && { role })
+        }
     })
 }
 

@@ -10,5 +10,6 @@ export const userQuery = z.object({
 })
 
 export const updateUserSchema = z.object({
-    name: z.string()
+    name: z.string().optional(),
+    role: z.string().optional()
 })

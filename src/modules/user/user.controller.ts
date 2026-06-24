@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
 import { AppError, successResponse } from "../../utils/response.js";
-import { getAllUsersDao, getUserByIdDao, updateUserDao } from "./user.dao.js";
+import { getAllUsersDao, getUserByIdDao } from "./user.dao.js";
 import { clearRefreshTokenCookie } from "../../utils/tokens.js";
-import { deleteUserService } from "./user.service.js";
+import { updateUserService, deleteUserService } from "./user.service.js";
 
 export const getAllUsers = async (req: Request, res: Response) => {
     const limit = req.query.limit ? Number(req.query.limit) : 5
@@ -12,18 +12,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
 }
 
 export const updateUser = async (req: Request, res: Response) => {
-    const { params: { id } } = req;
-    const { body: { name } } = req;
-    const authUser = req.user;
+    const id = req.params.id as string;
+    const { name, role }  = req.body;
+    const authUser = req.user!;
 
-    if (authUser?.id !== id) {
-        const error = new Error('Forbidden: You can only update your own profile') as AppError;
-        error.statusCode = 403;
-        throw error;
-    }
-
-    await updateUserDao({ id, name });
-
+    await updateUserService(authUser, { id, name, role });
     return successResponse(res, 200, 'User updated successfully');
 }
 
