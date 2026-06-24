@@ -8,7 +8,7 @@ const router = Router();
 router.use(authenticationMiddlewear);
 
 router.route('/')
-    .post(authorizationMiddlewear("policies", "create"), createPolicy)
+    .post(createPolicy)
     .get(authorizationMiddlewear("policies", "read"), getAllPolicy);
 
 router.route('/:id')

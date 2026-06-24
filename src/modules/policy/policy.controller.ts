@@ -5,7 +5,8 @@ import { deletePolicyDao, getAllPoliciesDao, getPolicyByIdDao } from './policy.d
 
 export const createPolicy = async (req: Request, res: Response) => {
     const { role, resource, action } = req.body;
-    await createPolicyService({ role, resource, action })
+    const authUser = req.user!
+    await createPolicyService(authUser, { role, resource, action })
     return successResponse(res, 201, 'Policy created successfully')
 };
 
