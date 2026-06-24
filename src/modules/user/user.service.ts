@@ -18,8 +18,7 @@ export const updateUserService = async (authUser: AuthenticatedUser, { id, name,
     await updateUserDao({
         id,
         name,
-        role
-        // ...(isAdmin && role && { role })
+        ...(isAdmin && role && { role })
     });
 }
 
